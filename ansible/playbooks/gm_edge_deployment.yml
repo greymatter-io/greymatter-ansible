@@ -1,0 +1,20 @@
+---
+
+# Create edge configs
+- hosts: tag_Name_gm_control_api_ubuntu
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-config
+  vars:
+    special_config: true
+    XDS_CLUSTER: edge
+    XDS_HOST: gm_control_ubuntu.greymatter.io
+
+# Run edge proxy
+- hosts: tag_Name_gm_proxy_ubuntu
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - ansible-role-proxy

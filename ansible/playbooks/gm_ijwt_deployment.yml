@@ -1,0 +1,10 @@
+---
+
+# Run internal jwt
+- hosts: tag_Name_gm_ijwt_ubuntu
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - ansible-role-redis
+    - ansible-role-internaljwt

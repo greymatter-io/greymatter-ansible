@@ -1,0 +1,11 @@
+---
+
+service_user: gmuser
+service_group: gmuser
+acert_home_dir: /tmp/acert_dir
+
+env_name: test
+
+create_rootCA: false
+
+acert_service:
