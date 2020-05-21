@@ -1,0 +1,9 @@
+---
+
+systemd_service: gm-data
+
+nexus_repo_url: "https://nexus.production.deciphernow.com"
+nexus_repo: "repository/raw-dev/greymatter"
+nexus_tar_file: "gm-data-1.1.0.tar.gz"
+
+MONGO_USE_TLS: 'false'

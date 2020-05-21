@@ -1,5 +1,0 @@
-service_user: gmuser
-service_group: gmuser
-
-apt_packages:
-  - jq

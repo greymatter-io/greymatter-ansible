@@ -1,7 +1,7 @@
 ---
 
 # Run gm-control-api
-- hosts: tag_Name_gm_control_api_ubuntu
+- hosts: tag_Name_gm_control_api
   user: ubuntu
   become: yes
   roles:
@@ -10,7 +10,7 @@
     - ansible-role-gmcli
 
 # Run gm-control
-- hosts: tag_Name_gm_control_ubuntu
+- hosts: tag_Name_gm_control
   user: ubuntu
   become: yes
   roles:

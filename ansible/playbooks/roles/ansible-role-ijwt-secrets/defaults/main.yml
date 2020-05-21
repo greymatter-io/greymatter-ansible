@@ -1,0 +1,8 @@
+---
+
+ijwt_secret_dir: "/tmp/ijwt_secrets"
+service_user: gmuser
+service_group: gmuser
+
+create_ijwt_secret:
+fetch_ijwt_secret:

@@ -1,0 +1,59 @@
+# {{ ansible_managed }}
+
+POLICY_CACHE_LIFETIME=10
+LISTING_DEBUG=true
+DELETE_EXPIRED={{ DELETE_EXPIRED | default('false') }}
+DELETE_EXPIRED_POLL_SECONDS=600
+CRASH_ON_ERROR=false
+GMDATA_FABRIC_CLUSTER=false
+GMDATA_NAMESPACE=world
+GMDATA_NAMESPACE_USERFIELD=email
+GMDATA_USE_TLS={{ GMDATA_USE_TLS | default('true') }}
+GMDATA_TRUST={{ GMDATA_TRUST | default(base64_values.results[2].content) }}
+GMDATA_CERT={{ GMDATA_CERT | default(base64_values.results[0].content) }}
+GMDATA_KEY={{ GMDATA_KEY | default(base64_values.results[1].content) }}
+CLIENT_PREFIX=/services/data/latest
+CLIENT_JWT_PREFIX=/
+JWT_PUB={{ JWT_PUB | default(base64_values.results[3].content) }}
+JWT_API_KEY={{ JWT_API_KEY | default('dm9sY2Fuby1lcGlkZW1pYy10d2VsZnRoLXRhbWFsZQ==') }}
+CLIENT_JWT_ENDPOINT_ADDRESS={{ CLIENT_JWT_ENDPOINT_ADDRESS | default('gm_ijwt_ubuntu.greymatter') }}
+CLIENT_JWT_ENDPOINT_PORT={{ CLIENT_JWT_ENDPOINT_PORT | default(8080) }}
+CLIENT_JWT_ENDPOINT_CERT={{ CLIENT_JWT_ENDPOINT_CERT | default(base64_values.results[0].content) }}
+CLIENT_JWT_ENDPOINT_KEY={{ CLIENT_JWT_ENDPOINT_KEY | default(base64_values.results[1].content) }}
+CLIENT_JWT_ENDOPINT_TRUST={{ CLIENT_JWT_ENDOPINT_TRUST | default(base64_values.results[2].content) }}
+CLIENT_JWT_ENDPOINT_PREFIX=/services/jwt-server/1.0
+GMDATAX_SESSION_MAX=1000
+S3_TASKS=4096
+LESS_CHATTY_INFO=false
+GMDATAX_CATCH_PANIC=false
+DISABLE_LOOKUPS=
+DONT_PANIC=true
+KAFKA_PEERS=
+KAFKA_TOPIC_UPDATE=gmdatax-update
+KAFKA_TOPIC_READ=gmdatax-read
+KAFKA_TOPIC_ERROR=gmdatax-error
+KAFKA_CONSUMER_GROUP=
+MASTERKEY=ac8923[lkn43589vi23kl4rfgv0ws
+USES3=false
+AWS_REGION=
+FILE_BUCKET=
+FILE_PARTITION=
+AWS_S3_ENDPOINT=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+HTTP_CACHE_SECONDS=
+MONGOHOST=localhost:27017
+MONGODB=gmdata
+MONGO_USE_TLS={{ MONGO_USE_TLS }}
+MONGO_CERT={{ MONGO_CERT | default(base64_values.results[4].content) if (MONGO_USE_TLS=='true') else ''}}
+MONGO_KEY={{ MONGO_KEY | default(base64_values.results[5].content) if (MONGO_USE_TLS=='true') else ''}}
+MONGO_TRUST={{ MONGO_TRUST | default(base64_values.results[6].content) if (MONGO_USE_TLS=='true') else ''}}
+MONGO_CN={{ MONGO_CN | default('localhost') }}
+MONGO_INITDB_ROOT_USERNAME=gmdata
+MONGO_INITDB_ROOT_PASSWORD=gmdata
+BIND_ADDRESS=0.0.0.0
+BIND_PORT={{ BIND_PORT | default(9080) }}
+PRETTY_PRINT=
+ZEROLOG_LEVEL=debug
+REKOGNITION_FACE_INDEX=
+GMDATA_PPROF_BIND=0.0.0.0:6060

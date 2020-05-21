@@ -1,8 +1,0 @@
----
-
-# User to run the cli
-service_user: "gmuser"
-service_group: "gmuser"
-
-cli_download_dir: "/tmp/gm_cli"
-cli_home_dir: "/usr/local/bin"

@@ -1,0 +1,57 @@
+---
+
+- name: Create gm-catalog leaf certs
+  include_role:
+    name: ansible-role-acert
+    apply:
+      tags:
+        - catalog
+  vars:
+    acert_service: gm-catalog
+  when: ( ansible_distribution == 'Ubuntu' )
+  tags: catalog
+
+- name: Create gm-catalog authority base64 value
+  slurp:
+    src: /tmp/acert_dir/test-gm-catalog-leaf-authority.pem
+  register: gm_catalog_authority_base64_value
+  tags: catalog
+
+- name: Create gm-catalog key base64 value
+  slurp:
+    src: /tmp/acert_dir/test-gm-catalog-leaf-key.pem
+  register: gm_catalog_key_base64_value
+  tags: catalog
+
+- name: Create gm-catalog cert base64 value
+  slurp:
+    src: /tmp/acert_dir/test-gm-catalog-leaf-certificate.pem
+  register: gn_catalog_cert_base64_value
+  tags: catalog
+
+- name: Set trust, cert, and key value
+  set_fact:
+    CERT_VALUE="{{ gn_catalog_cert_base64_value.content }}"
+    KEY_VALUE="{{ gm_catalog_key_base64_value.content }}"
+    AUTHORITY_VALUE="{{ gm_catalog_authority_base64_value.content }}"
+  tags: catalog
+
+- name: Create and run gm-catalog sidecar
+  include_role:
+    name: ansible-role-proxy
+    apply:
+      tags:
+        - catalog    
+  when: ( ansible_distribution == 'Ubuntu' )
+  tags: catalog
+
+- name: Create and run gm-catalog binary as a service
+  include_role:
+    name: ansible-role-systemd
+    public: yes
+    apply:
+      tags:
+        - catalog
+  when: ( ansible_distribution == 'Ubuntu' )
+  tags: catalog
+  

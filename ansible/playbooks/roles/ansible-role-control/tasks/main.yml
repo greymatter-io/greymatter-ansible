@@ -1,0 +1,10 @@
+---
+
+- name: Run gm-control binary as a service
+  include_role:
+    name: ansible-role-systemd
+    public: yes
+    apply:
+      tags:
+        - control
+  tags: control

@@ -1,0 +1,23 @@
+---
+
+- name: Create {{ ijwt_secret_dir }} directory
+  file:
+    path: "{{ ijwt_secret_dir }}"
+    state: directory
+    mode: u=rwx,g=rwx,o=rwx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    recurse: yes
+  register: ijwt_secret_dir_status
+
+- name: Include create-ijwt-secret.yml
+  include: create-ijwt-secret.yml
+  when: 
+    - create_ijwt_secret
+    - ijwt_secret_dir_status.changed
+
+- name: Include fetch-ijwt-secret.yml
+  include: fetch-ijwt-secret.yml
+  when:
+    - fetch_ijwt_secret
+    # - not ijwt_secret_dir_status.changed

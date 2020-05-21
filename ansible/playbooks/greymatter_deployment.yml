@@ -1,0 +1,7 @@
+---
+# Create configs
+- hosts: tag_Name_gm_control_api_ubuntu
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-config

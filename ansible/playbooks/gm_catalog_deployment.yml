@@ -1,7 +1,7 @@
 ---
 
 # Create gm-catalog jsons
-- hosts: tag_Name_gm_control_api_ubuntu
+- hosts: tag_Name_gm_control_api
   user: ubuntu
   become: yes
   roles:
@@ -16,7 +16,7 @@
   tags: gm-catalog, gm-catalog-jsons
 
 # Run gm-catalog and its sidecar
-- hosts: tag_Name_gm_catalog_ubuntu
+- hosts: tag_Name_gm_catalog
   user: ubuntu
   become: yes
   roles:

@@ -1,10 +1,28 @@
 ---
+# Create gm-ijwt configs
+- hosts: tag_Name_gm_control_api
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-config
+  vars:
+    service_config: true
+    edge_config: true
+    SERVICE_NAME: internal-jwt-security
+    GLOBAL_SECRET_ENABLED: true
+    SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/gm-ijwt-leaf-authority.pem
+    SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-ijwt-leaf-certificate.pem
+    SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-ijwt-leaf-key.pem
 
-# Run internal jwt
-- hosts: tag_Name_gm_ijwt_ubuntu
+# Run internal jwt and its sidecar
+- hosts: tag_Name_gm_ijwt
   user: ubuntu
   become: yes
   roles:
     - ansible-role-preparatory
     - ansible-role-redis
     - ansible-role-internaljwt
+    - ansible-role-proxy
+  vars:
+    XDS_CLUSTER: internal-jwt-security
+    XDS_HOST: gm_control.greymatter

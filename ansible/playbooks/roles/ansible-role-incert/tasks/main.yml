@@ -1,0 +1,43 @@
+---
+
+- name: Create certs directory
+  file:
+    path: "{{ certs_directory }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+  tags: incert
+
+- name: Add incert binary
+  copy:
+    src: incert
+    dest: /usr/local/bin
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    mode: u=rwx,g=rx,o=rx
+  tags: incert
+
+- name: Check if the localhost certs were created within 4 days
+  shell: |
+    find "{{ certs_directory }}" -type f -newermt $(date '+%Y-%m-%d' --date="4 days ago") | grep localhost
+  register: cert_result
+  ignore_errors: yes
+  tags: incert
+
+- name: Create localhost certificates
+  shell: |
+    /usr/local/bin/incert issue single -c localhost -e 432000s -d {{ certs_directory }}
+  when: cert_result.rc == 1
+  tags: incert
+
+- name: Update certs directory permissions
+  file:
+    path: "{{ certs_directory }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    recurse: yes
+  tags: incert
+    

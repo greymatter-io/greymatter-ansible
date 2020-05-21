@@ -1,0 +1,43 @@
+---
+
+- name: Create gm-data leaf certs
+  include_role:
+    name: ansible-role-acert
+    apply:
+      tags:
+        - idata
+  vars:
+    acert_service: gm-data
+  tags: idata
+
+- name: Fetch ijwt-secrets
+  include_role:
+    name: ansible-role-ijwt-secrets
+    apply:
+      tags:
+        - idata
+  vars:
+    fetch_ijwt_secret: yes
+  tags: idata
+
+- name: Extract base64 values of ssl certs
+  slurp:
+    src: "{{ item.src }}"
+  register: base64_values
+  loop:
+    - { src: '/etc/proxy/tls/sidecar/gm-data-leaf-certificate.pem' }
+    - { src: '/etc/proxy/tls/sidecar/gm-data-leaf-key.pem' }
+    - { src: '/etc/proxy/tls/sidecar/gm-data-leaf-authority.pem' }
+    - { src: '/tmp/ijwt_secrets/jwtES512.key.pub' }
+    - { src: '/etc/proxy/tls/sidecar/localhost.crt' }
+    - { src: '/etc/proxy/tls/sidecar/localhost.key' }
+    - { src: '/etc/proxy/tls/sidecar/intermediate.crt' }
+  tags: idata
+  
+- name: Run gm-data binary as a service
+  include_role:
+    name: ansible-role-systemd
+    apply:
+      tags:
+        - idata
+  tags: idata
