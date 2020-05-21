@@ -26,17 +26,17 @@ resource "aws_instance" "instances" {
   ]
 
   tags = {
-    Name  = element(var.instance_tags, count.index)
+    Name  = element(var.instance_name, count.index)
+    element(var.cluster_tag, count.index) = ""
   }
 }
 
-# Creater record sets for the servers
+# Creater record sets for the instances
 resource "aws_route53_record" "priv_record_set" {
   count   = var.instance_count
   zone_id = var.private_zone_id
-  name    = "${element(var.instance_tags, count.index)}.${var.private_zone_name}"
-#   name    = "${element(var.example_gsuite, count.index)}"
+  name    = "${element(var.instance_name, count.index)}.${var.private_zone_name}"
   type    = "A"
   ttl     = "300"
-  records = ["${element(aws_instance.servers.*.private_ip, count.index)}"]
+  records = ["${element(aws_instance.instances.*.private_ip, count.index)}"]
 }

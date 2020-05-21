@@ -18,20 +18,20 @@ terraform {
 }
 
 module "networking" {
-  source     = "modules/networking"
+  source     = "./modules/networking"
 }
 
 module "dns" {
-  source = "modules/dns"
+  source = "./modules/dns"
 
   vpc_id      = module.networking.gm_vpc_id
 }
 
 module "compute" {
-  source = "modules/compute"
+  source = "./modules/compute"
 
   pub_sub_1_id        = module.networking.gm_public_subnet_1
   gm_sg_id            = module.networking.gm_sg_id
   private_zone_id     = module.dns.gm_private_zone_id
-  private_zone_name   = module.dns.private_route53_zone_name
+  private_zone_name   = module.dns.gm_private_zone_name
 }

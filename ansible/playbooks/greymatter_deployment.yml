@@ -1,7 +1,9 @@
 ---
-# Create configs
-- hosts: tag_Name_gm_control_api_ubuntu
-  user: ubuntu
-  become: yes
-  roles:
-    - ansible-role-config
+
+- import_playbook: gm_fabric_deployment.yml
+
+- import_playbook: gm_edge_deployment.yml
+
+- import_playbook: gm_ijwt_deployment.yml
+
+- import_playbook: gm_idata_deployment.yml
