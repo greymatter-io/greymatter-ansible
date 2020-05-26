@@ -5,15 +5,15 @@ locals {
 provider "aws" {
   region  = "us-east-1"
   version = "~> 2.7"
-  profile = "gm"
+  # profile = "gm"
 }
 
 terraform {
   backend "s3" {
     bucket   = "terraform-greymatter-backend"
     key      = "tfstate"
-    region   = "us-east-1"
-    profile  = "gm"
+    # region   = "us-east-1"
+    # profile  = "gm"
   }
 }
 

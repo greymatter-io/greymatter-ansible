@@ -1,0 +1,11 @@
+---
+
+- name: Destroy Infrastructure
+  terraform:
+    project_path: '../../terraform/'
+    state: absent
+    force_init: true
+    backend_config:
+      region: "us-east-1"
+      bucket: "terraform-greymatter-backend"
+      key: "tfstate"

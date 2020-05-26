@@ -1,5 +1,18 @@
 ---
 
+- hosts: localhost
+  roles:
+    - ansible-role-terraform
+  vars:
+    deploy_infrastructure: true
+
+- name: Refresh inventory
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Refresh inventory
+      meta: refresh_inventory
+
 - import_playbook: gm_fabric_deployment.yml
 
 - import_playbook: gm_edge_deployment.yml

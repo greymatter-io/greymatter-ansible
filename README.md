@@ -1,26 +1,15 @@
 #### Deploy Greymatter ####
 
-# Deploy infrastructure #
-
-cd terraform
-
-terraform get
-
-terraform init
-
-terraform apply
-
-# Initialize dynamic inventory #
+# Export aws credentiials #
 
 export AWS_ACCESS_KEY_ID='access_key_id'
 
 export AWS_SECRET_ACCESS_KEY='secret_access_key'
 
-export ANSIBLE_HOSTS=/etc/ansible/ec2.py
-
-export EC2_INI_PATH=/etc/ansible/ec2.ini
+export AWS_DEFAULT_REGION=region
 
 eval 'ssh-agent'
+
 ssh-add ~/.ssh/keypair.pem 
 
 # Export nexus credentials #
@@ -41,19 +30,11 @@ export GM_CONTROL_AWS_VPC_ID="{vpc_id}"
 
 # Run ansible playbook #
 
-ansible-playbook -i /etc/ansible/ec2.py playbooks/greymatter_deployment.yml
+ansible-playbook -i inventories/aws_ec2.yml playbooks/greymatter_deployment.yml
 
 #### Destroy Greymatter ####
 
-rm ansible/playbooks/roles/ansible-role-acert/files/sidecar.tgz
-
-rm ansible/playbooks/roles/ansible-role-ijwt-secrets/files/ijwt_secrets.tgz
-
-cd terraform
-
-terraform destroy
-
-
+ansible-playbook -i inventories/aws_ec2.yml playbooks/greymatter_destroy.yml
 
 
 

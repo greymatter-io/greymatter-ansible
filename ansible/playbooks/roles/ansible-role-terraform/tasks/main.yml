@@ -1,0 +1,15 @@
+---
+
+- name: Initialize terraform modules
+  command: cd ../../terraform && terraform get
+  delegate_to: localhost
+
+- name: Deploy Infrastructure
+  include: deploy_infrastructure.yml
+  when: deploy_infrastructure 
+  delegate_to: localhost
+
+- name: Destroy Infrastructure
+  include: destroy_infrastructure.yml
+  when: destroy_infrastructure
+  delegate_to: localhost

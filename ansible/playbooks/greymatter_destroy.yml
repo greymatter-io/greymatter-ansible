@@ -1,0 +1,18 @@
+---
+
+- hosts: localhost
+  tasks:
+  - name: Remove sidecar.tgz
+    file:
+      path: roles/ansible-role-acert/files/sidecar.tgz
+      state: absent
+  - name: Remove ijwt_secrets.tgz
+    file:
+      path: roles/ansible-role-ijwt-secrets/files/ijwt_secrets.tgz
+      state: absent
+
+- hosts: localhost
+  roles:
+    - ansible-role-terraform
+  vars:
+    destroy_infrastructure: true

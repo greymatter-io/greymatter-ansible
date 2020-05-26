@@ -1,0 +1,11 @@
+plugin: aws_ec2
+boto_profile: gm
+regions: # populate inventory with instances in these regions
+  - us-east-1
+  - us-east-2
+hostnames:
+  - ip-address
+keyed_groups:
+  # Add hosts to tag_Name_Value groups for each Name/Value tag pair
+  - prefix: tag
+    key: tags
