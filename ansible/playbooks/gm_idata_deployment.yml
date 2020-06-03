@@ -7,12 +7,16 @@
     - ansible-role-config
   vars:
     service_config: true
-    edge_config: true
+    value_edge_config: true
     SERVICE_NAME: data-internal
+    SERVICE_HOST_DNS: gm_idata.greymatter
     GLOBAL_SECRET_ENABLED: true
     SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/gm-data-leaf-authority.pem
     SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-data-leaf-certificate.pem
     SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-data-leaf-key.pem
+    EDGE_SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/edge-leaf-authority.pem
+    EDGE_SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/edge-leaf-certificate.pem
+    EDGE_SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/edge-leaf-key.pem
     CLUSTER_PORT: 9080
 
 # Run gm-data and its sidecar

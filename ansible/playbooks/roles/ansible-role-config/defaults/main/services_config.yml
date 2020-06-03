@@ -8,7 +8,8 @@ services_config_dir: /etc/{{ global.service_name }}-configs
 
 # Global config values
 global:  
-  service_name: "{{ SERVICE_NAME }}"
+  service_name: "{{ SERVICE_NAME | default('null') }}"
+  service_host_dns: "{{ SERVICE_HOST_DNS | default('null') }}"
   zone_key: zone-default-zone
   jwt_api_key: dm9sY2Fuby1lcGlkZW1pYy10d2VsZnRoLXRhbWFsZQ==
   secret:

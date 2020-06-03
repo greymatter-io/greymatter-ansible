@@ -7,7 +7,7 @@
   roles:
     - ansible-role-config
   vars:
-    special_config: true
+    edge_proxy_config: true
     SERVICE_NAME: edge
 
 # Run edge proxy

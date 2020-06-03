@@ -1,0 +1,50 @@
+---
+
+- name: Create json config directory for edge-proxy
+  file:
+    path: "{{ edge_proxy_config_dir }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+  register: edge_proxy_config_dir_status
+  tags: config
+
+- name: Create/Update json configs files for edge-proxy
+  template:
+    src: "{{ item.location }}"
+    dest: "{{ edge_proxy_config_dir }}/{{ item.name }}.json"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+  with_items: "{{ edge_proxy }}"
+  register: edge_proxy_config_files_status
+  tags: config
+
+- name: Update greymatter service objects for edge-proxy
+  shell: |
+    object_name=$(jq -r .{{ item.item.type }}_key {{ edge_proxy_config_dir }}/{{ item.item.name }}.json)
+
+    greymatter delete {{ item.item.type }} $object_name
+
+    greymatter create {{ item.item.type }} < {{ edge_proxy_config_dir }}/{{ item.item.name }}.json
+
+    exit 0
+  when: 
+    - item.changed
+    - not edge_proxy_config_dir_status.changed
+  with_items: "{{ edge_proxy_config_files_status.results }}"
+  tags: config
+
+- name: Create greymatter service objects for edge-proxy
+  shell: |
+    object_name=$(jq -r .{{ item.type }}_key {{ edge_proxy_config_dir }}/{{ item.name }}.json)
+
+    greymatter delete {{ item.type }} $object_name
+
+    greymatter create {{ item.type }} < {{ edge_proxy_config_dir }}/{{ item.name }}.json
+
+    exit 0
+  when:
+    - edge_proxy_config_dir_status.changed
+  with_items: "{{ edge_proxy }}"
+  tags: config

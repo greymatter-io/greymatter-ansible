@@ -9,11 +9,7 @@
   "path": "{{ values.catalog.data_prefix }}/",
   "prefix_rewrite": "/",
   "redirects": null,
-  {% if global.spire.enabled is sameas true %}
   "shared_rules_key": "catalog-data-internal-shared-rules",
-  {% else %}
-  "shared_rules_key": "edge-data-internal-shared-rules",
-  {% endif %}
   "rules": null,
   "response_data": {},
   "cohort_seed": null,

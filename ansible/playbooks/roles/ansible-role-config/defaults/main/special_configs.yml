@@ -7,6 +7,13 @@ special_config: false
 special_config_dir: /etc/special-configs
 
 values:
+    edge_config:
+        secret:
+            enabled: "{{ EDGE_GLOBAL_SECRET_ENABLED | default(false) }}"
+            edge_ssl_require_client_certs: true
+            edge_ssl_config_trust_file: "{{ EDGE_SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/ca.crt') }}"
+            edge_ssl_config_certificate_path: "{{ EDGE_SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/server.crt') }}"
+            edge_ssl_config_key_path: "{{ EDGE_SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/server.key') }}"
     edge:
         egress:
             secret:
@@ -45,12 +52,38 @@ values:
             mount_point: /etc/proxy/tls/sidecar
             insecure: true
             secret_keys:
-                cert: server.crt
-                key: server.key
-                ca: ca.crt
+                cert: /etc/proxy/tls/sidecar/gm-catalog-leaf-certificate.pem
+                key: /etc/proxy/tls/sidecar/gm-catalog-leaf-key.pem
+                ca: /etc/proxy/tls/sidecar/gm-catalog-leaf-authority.pem
         # routes:
         #     - '/services/catalog/{{ catalog.version }}'
         #     - '/services/catalog/{{ catalog.version }}/'
+    idata:
+        catalogEnabled: true
+        controlEnabled: true
+        name: 'Grey Matter Data'
+        serviceName: 'data'
+        observablesEnabled: false
+        port: 8181
+        enableInstanceMetrics: 'true'
+        capability: 'Data'
+        jwt_prefix: '/jwt'
+        documentation: '/services/data/latest/static/ui/index.html'
+        owner: 'Decipher'
+        version: 1.0.0
+        jwt_prefix: /jwt
+        # routes:
+        #     - '/services/data/{{ data.version }}'
+        #     - '/services/data/{{ data.version }}/'
+        secret:
+            enabled: true
+            secret_name: sidecar-certs
+            mount_point: /etc/proxy/tls/sidecar
+            insecure: true
+            secret_keys:
+                cert: /etc/proxy/tls/sidecar/gm-data-leaf-certificate.pem
+                key: /etc/proxy/tls/sidecar/gm-data-leaf-key.pem
+                ca: /etc/proxy/tls/sidecar/gm-data-leaf-authority.pem
     data:
         catalogEnabled: true
         controlEnabled: true

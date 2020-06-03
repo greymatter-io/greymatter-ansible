@@ -9,11 +9,7 @@
   "path": "{{ values.data.jwt_prefix }}/",
   "prefix_rewrite": "/",
   "redirects": null,
-  {% if global.spire.enabled is sameas true %}
   "shared_rules_key": "data-jwt-shared-rules",
-  {% else %}
-  "shared_rules_key": "edge-jwt-security-shared-rules",
-  {% endif %}
   "rules": null,
   "response_data": {},
   "cohort_seed": null,

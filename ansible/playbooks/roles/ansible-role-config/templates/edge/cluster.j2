@@ -22,14 +22,21 @@
   "require_tls": true,
   "ssl_config": {
     "require_client_certs": true,
-    "trust_file": "{{ global.secret.ssl_config_trust_file }}",
+    "trust_file": "{{ values.edge_config.secret.edge_ssl_config_trust_file }}",
     "cert_key_pairs": [
       {
-        "certificate_path": "{{ global.secret.ssl_config_certificate_path }}",
-        "key_path": "{{ global.secret.ssl_config_key_path }}"
+        "certificate_path": "{{ values.edge_config.secret.edge_ssl_config_certificate_path }}",
+        "key_path": "{{ values.edge_config.secret.edge_ssl_config_key_path }}"
       }
     ]
   },
   {% endif %}
+  "instances": [
+    {
+      "host": "{{ global.service_host_dns }}",
+      "port": 8080,
+      "metadata": null
+    }
+  ],
   "outlier_detection": null
 }

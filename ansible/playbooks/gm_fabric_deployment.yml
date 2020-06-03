@@ -16,3 +16,6 @@
   roles:
     - ansible-role-preparatory
     - ansible-role-control
+  vars:
+    config: "{{ lookup('file', '../group_vars/tf_ansible_vars_file.yml') | from_yaml }}"
+    GM_CONTROL_AWS_VPC_ID: "{{ config.tf_vpc_id }}"

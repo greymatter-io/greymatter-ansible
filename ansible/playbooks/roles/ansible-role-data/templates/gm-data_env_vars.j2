@@ -16,12 +16,13 @@ CLIENT_PREFIX=/services/data/latest
 CLIENT_JWT_PREFIX=/
 JWT_PUB={{ JWT_PUB | default(base64_values.results[3].content) }}
 JWT_API_KEY={{ JWT_API_KEY | default('dm9sY2Fuby1lcGlkZW1pYy10d2VsZnRoLXRhbWFsZQ==') }}
-CLIENT_JWT_ENDPOINT_ADDRESS={{ CLIENT_JWT_ENDPOINT_ADDRESS | default('gm_ijwt_ubuntu.greymatter') }}
+CLIENT_JWT_ENDPOINT_USE_TLS={{ CLIENT_JWT_ENDPOINT_USE_TLS | default('true') }}
+CLIENT_JWT_ENDPOINT_ADDRESS={{ CLIENT_JWT_ENDPOINT_ADDRESS | default('localhost') }}
 CLIENT_JWT_ENDPOINT_PORT={{ CLIENT_JWT_ENDPOINT_PORT | default(8080) }}
 CLIENT_JWT_ENDPOINT_CERT={{ CLIENT_JWT_ENDPOINT_CERT | default(base64_values.results[0].content) }}
 CLIENT_JWT_ENDPOINT_KEY={{ CLIENT_JWT_ENDPOINT_KEY | default(base64_values.results[1].content) }}
-CLIENT_JWT_ENDOPINT_TRUST={{ CLIENT_JWT_ENDOPINT_TRUST | default(base64_values.results[2].content) }}
-CLIENT_JWT_ENDPOINT_PREFIX=/services/jwt-server/1.0
+CLIENT_JWT_ENDPOINT_TRUST={{ CLIENT_JWT_ENDPOINT_TRUST | default(base64_values.results[2].content) }}
+CLIENT_JWT_ENDPOINT_PREFIX=/jwt
 GMDATAX_SESSION_MAX=1000
 S3_TASKS=4096
 LESS_CHATTY_INFO=false

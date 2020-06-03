@@ -1,4 +1,5 @@
 ---
+backend_bucket_name: "{{ lookup('env','TERRAFORM_BACKEND_BUCKET') }}"
 
 deploy_infrastructure:
 

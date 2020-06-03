@@ -7,12 +7,16 @@
     - ansible-role-config
   vars:
     service_config: true
-    edge_config: true
+    value_edge_config: true
     SERVICE_NAME: internal-jwt-security
+    SERVICE_HOST_DNS: gm_ijwt.greymatter
     GLOBAL_SECRET_ENABLED: true
     SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/gm-ijwt-leaf-authority.pem
     SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-ijwt-leaf-certificate.pem
     SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-ijwt-leaf-key.pem
+    EDGE_SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/edge-leaf-authority.pem
+    EDGE_SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/edge-leaf-certificate.pem
+    EDGE_SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/edge-leaf-key.pem
 
 # Run internal jwt and its sidecar
 - hosts: tag_Name_gm_ijwt

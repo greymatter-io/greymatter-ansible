@@ -14,11 +14,20 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"]
 }
 
+module "ssh_key_pair" {
+  source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
+  name                  = "greymatter_key"
+  ssh_public_key_path   = "secrets"
+  generate_ssh_key      = "true"
+  private_key_extension = ".pem"
+  public_key_extension  = ".pub"
+}
+
 resource "aws_instance" "instances" {
   count         = var.instance_count
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
-  key_name      = var.key_name
+  key_name      = module.ssh_key_pair.key_name
   subnet_id     = var.pub_sub_1_id
   associate_public_ip_address = true
   vpc_security_group_ids = [

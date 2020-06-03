@@ -96,7 +96,7 @@ resource "aws_security_group_rule" "ingress" {
   from_port         = 0
   to_port           = 65535
   protocol          = "tcp"
-  cidr_blocks       = ["74.96.242.207/32"]
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.sg.id
 }
 
@@ -116,4 +116,18 @@ resource "aws_security_group_rule" "egress_allow_all" {
   from_port         = 0
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.sg.id
+}
+
+# Define an Ansible var_file containing Terraform variable values
+data "template_file" "tf_ansible_vars_file" {
+  template = "${file("./tf_ansible_vars_file.yml.tpl")}"
+  vars = {
+    vpc_id = aws_vpc.vpc.id
+  }
+}
+
+# Render the Ansible var_file containing Terrarorm variable values
+resource "local_file" "tf_ansible_vars_file" {
+  content  = data.template_file.tf_ansible_vars_file.rendered
+  filename = "../ansible/group_vars/tf_ansible_vars_file.yml"
 }

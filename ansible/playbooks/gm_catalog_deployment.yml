@@ -1,6 +1,6 @@
 ---
 
-# Create gm-catalog jsons
+# Create gm-catalog configs
 - hosts: tag_Name_gm_control_api
   user: ubuntu
   become: yes
@@ -8,12 +8,17 @@
     - ansible-role-config
   vars:
     service_config: true
-    global.service_name: gm-catalog
-    cluster.port: 9080
-    global.ssl_config_trust_file: /tmp/acert_dir/test-gm-catalog-leaf-authority.pem
-    global.ssl_config_certificate_path: /tmp/acert_dir/test-gm-catalog-leaf-certificate.pem
-    global.ssl_config_key_path: /tmp/acert_dir/test-gm-catalog-leaf-key.pem
-  tags: gm-catalog, gm-catalog-jsons
+    value_edge_config: true
+    SERVICE_NAME: catalog
+    SERVICE_HOST_DNS: gm_catalog.greymatter
+    GLOBAL_SECRET_ENABLED: true
+    CLUSTER_PORT: 9080
+    SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/gm-catalog-leaf-authority.pem
+    SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-catalog-leaf-certificate.pem
+    SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-catalog-leaf-key.pem
+    EDGE_SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/edge-leaf-authority.pem
+    EDGE_SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/edge-leaf-certificate.pem
+    EDGE_SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/edge-leaf-key.pem
 
 # Run gm-catalog and its sidecar
 - hosts: tag_Name_gm_catalog
@@ -21,9 +26,8 @@
   become: yes
   roles:
     - ansible-role-preparatory
+    - ansible-role-proxy
     - ansible-role-catalog
   vars:
-    CONTROL_SERVER_0_ADDRESS: 54.164.158.224
-    XDS_HOST: 54.164.158.224
-    XDS_CLUSTER: gm-catalog
-  tags: gm-catalog
+    XDS_CLUSTER: catalog
+    XDS_HOST: gm_control.greymatter

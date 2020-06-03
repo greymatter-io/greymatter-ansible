@@ -9,11 +9,7 @@
     "path": "/jwt",
     "prefix_rewrite": "/jwt/",
     "redirects": null,
-    {% if global.spire.enabled is sameas true %}
     "shared_rules_key": "shared-rules-data-internal-to-internal-jwt",
-    {% else %}
-    "shared_rules_key": "edge-internal-jwt-security-shared-rules",
-    {% endif %}
     "rules": null,
     "response_data": {},
     "cohort_seed": null,

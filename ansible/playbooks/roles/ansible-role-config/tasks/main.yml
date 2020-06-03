@@ -7,10 +7,15 @@
 
 - name: Run edge_json_configs task to create edge config jsons
   include: edge_json_configs.yml
-  when: edge_config
+  when: value_edge_config
   tags: config
 
 - name: Run special_json_configs task to create special config jsons
   include: special_json_configs.yml
   when: special_config
+  tags: config
+
+- name: Run special_json_configs task to create edge proxy config jsons
+  include: edge_proxy_json_configs.yml
+  when: edge_proxy_config
   tags: config

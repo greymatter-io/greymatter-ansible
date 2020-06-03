@@ -2,18 +2,38 @@
   "cluster_key": "data-to-jwt-cluster",
   "zone_key": "zone-default-zone",
   "name": "jwt-security",
+  {% if global.spire.enabled is sameas true %}
   "require_tls": true,
   "secret": {
-    "secret_key": "secret-jwt-security-secret",
-    "secret_name": "spiffe://quickstart.greymatter.io/data",
-    "secret_validation_name": "spiffe://quickstart.greymatter.io",
-    "ecdh_curves": [
-      "X25519:P-256:P-521:P-384"
-    ],
+    "secret_key": "secret-data-secret",
+    "secret_name": "spiffe://{{ global.spire.trust_domain }}/data",
+    "secret_validation_name": "spiffe://{{ global.spire.trust_domain }}",
     "subject_names": [
-      "spiffe://{{ global.spire.trust_domain }}/jwt-security"
+      "spiffe://{{ global.spire.trust_domain }}/edge"
+  ],
+    "ecdh_curves": [
+        "X25519:P-256:P-521:P-384"
     ]
   },
+  {% elif global.secret.enabled is sameas true %}
+  "require_tls": true,
+  "ssl_config": {
+    "require_client_certs": true,
+    "trust_file": "{{ values.data.secret.secret_keys.ca }}",
+    "cert_key_pairs": [
+      {
+        "certificate_path": "{{ values.data.secret.secret_keys.cert }}",
+        "key_path": "{{ values.data.secret.secret_keys.key }}"
+      }
+    ]
+  },
+  {% endif %}
+  "instances": [
+    {
+        "host": "gm_data.greymatter",
+        "port": 8080
+    }
+  ],
   "circuit_breakers": null,
   "outlier_detection": null,
   "health_checks": []

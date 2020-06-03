@@ -28,35 +28,43 @@ edge:
   - name: cluster
     type: cluster
     location: edge/cluster.j2
+  - name: shared_rules
+    type: shared_rules
+    location: edge/shared_rules.j2
   - name: route-1
     type: route
     location: edge/route-1.j2
   - name: route-2
     type: route
     location: edge/route-2.j2
-  - name: shared_rules
-    type: shared_rules
-    location: edge/shared_rules.j2
 
-special:
-  - name: domain
-    type: domain
-    location: special/domain.j2
-  - name: domain-egress
-    type: domain
-    location: special/domain-egress.j2
-  - name: listener
-    type: listener
-    location: special/listener.j2
-  - name: listener-egress
-    type: listener
-    location: special/listener-egress.j2
-  - name: proxy
-    type: proxy
-    location: special/proxy.j2
+edge_proxy:
   - name: cluster
     type: cluster
-    location: special/cluster.j2
+    location: special/edge-proxy/cluster.j2
+  - name: domain
+    type: domain
+    location: special/edge-proxy/domain.j2
+  - name: domain-egress
+    type: domain
+    location: special/edge-proxy/domain-egress.j2
+  - name: listener
+    type: listener
+    location: special/edge-proxy/listener.j2
+  - name: listener-egress
+    type: listener
+    location: special/edge-proxy/listener-egress.j2
+  - name: proxy
+    type: proxy
+    location: special/edge-proxy/proxy.j2
+  - name: shared_rules
+    type: shared_rules
+    location: special/edge-proxy/shared_rules.j2
+  - name: route
+    type: route
+    location: special/edge-proxy/route.j2
+
+special:
   - name: internal-cluster-catalog-data-internal
     type: cluster
     location: special/internal-cluster-catalog-data-internal.j2
@@ -66,9 +74,6 @@ special:
   - name: internal-cluster-int-data-to-int-jwt
     type: cluster
     location: special/internal-cluster-int-data-to-int-jwt.j2
-  - name: shared_rules
-    type: shared_rules
-    location: special/shared_rules.j2
   - name: internal-shared-rules-catalog-data-internal
     type: shared_rules
     location: special/internal-shared-rules-catalog-data-internal.j2
@@ -78,9 +83,6 @@ special:
   - name: internal-shared-rules-int-data-int-jwt
     type: shared_rules
     location: special/internal-shared-rules-int-data-int-jwt.j2
-  - name: route
-    type: route
-    location: special/route.j2
   - name: route-jwt
     type: route
     location: special/route-jwt.j2

@@ -5,17 +5,14 @@ locals {
 provider "aws" {
   region  = "us-east-1"
   version = "~> 2.7"
-  # profile = "gm"
 }
 
-terraform {
-  backend "s3" {
-    bucket   = "terraform-greymatter-backend"
-    key      = "tfstate"
-    # region   = "us-east-1"
-    # profile  = "gm"
-  }
-}
+# terraform {
+#   backend "s3" {
+#     bucket   = "terraform-greymatter-backend"
+#     key      = "tfstate"
+#   }
+# }
 
 module "networking" {
   source     = "./modules/networking"

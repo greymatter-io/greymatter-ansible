@@ -5,6 +5,7 @@
     - ansible-role-terraform
   vars:
     deploy_infrastructure: true
+  tags: gm_infra
 
 - name: Refresh inventory
   hosts: localhost
@@ -12,11 +13,30 @@
   tasks:
     - name: Refresh inventory
       meta: refresh_inventory
+  tags: gm_infra
 
 - import_playbook: gm_fabric_deployment.yml
+  tags: gm_fabric
 
 - import_playbook: gm_edge_deployment.yml
+  tags: gm_edge
 
 - import_playbook: gm_ijwt_deployment.yml
+  tags: gm_ijwt
 
 - import_playbook: gm_idata_deployment.yml
+  tags: gm_idata
+
+- import_playbook: gm_catalog_deployment.yml
+  tags: gm_catalog
+
+# Create special configs
+- hosts: tag_Name_gm_control_api
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-config
+  vars:
+    GLOBAL_SECRET_ENABLED: true
+    special_config: true
+  tags: gm_special_config

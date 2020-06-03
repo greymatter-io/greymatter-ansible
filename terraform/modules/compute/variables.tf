@@ -1,8 +1,3 @@
-variable "key_name" {
-  type        = string
-  default     = "training_gm"
-}
-
 variable "instance_count" {
   default     = "6"
 }
@@ -18,7 +13,7 @@ variable "instance_name" {
 
 variable "cluster_tag" {
   type = list(string)
-  default = ["control_api", "control","gm:cluster:edge:8080","gm:cluster:internal-jwt-security:8080","gm:cluster:data-internal:8080","gm_catalog"]
+  default = ["gm:cluster:control-api:8080", "control","gm:cluster:edge:8080","gm:cluster:internal-jwt-security:8080","gm:cluster:data-internal:8080","gm:cluster:catalog:8080"]
 }
 
 variable "pub_sub_1_id" {}

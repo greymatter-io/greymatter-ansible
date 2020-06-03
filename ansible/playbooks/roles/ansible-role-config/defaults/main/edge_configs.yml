@@ -1,7 +1,19 @@
 ---
 
+# Special edge-proxy configs
+edge_proxy_config: false
+edge_proxy_config_dir: /etc/edge-proxy-configs
+
 # Config jsons creation flag
-edge_config: false
+value_edge_config: false
 
 # Path where configs are saved
-edge_config_dir: /etc/edge-configs
+edge_config_dir: /etc/edge-configs/{{ global.service_name }}
+
+edge_config:
+  secret:
+    enabled: "{{ EDGE_GLOBAL_SECRET_ENABLED | default(false) }}"
+    edge_ssl_require_client_certs: true
+    edge_ssl_config_trust_file: "{{ EDGE_SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/ca.crt') }}"
+    edge_ssl_config_certificate_path: "{{ EDGE_SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/server.crt') }}"
+    edge_ssl_config_key_path: "{{ EDGE_SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/server.key') }}"

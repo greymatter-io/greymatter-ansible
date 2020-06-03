@@ -2,18 +2,38 @@
     "cluster_key": "data-internal-to-internal-jwt-cluster",
     "zone_key": "zone-default-zone",
     "name": "internal-jwt-security",
+    {% if global.spire.enabled is sameas true %}
     "require_tls": true,
     "secret": {
-      "secret_key": "secret-internal-jwt-security-secret",
-      "secret_name": "spiffe://quickstart.greymatter.io/data-internal",
-      "secret_validation_name": "spiffe://quickstart.greymatter.io",
-      "ecdh_curves": [
-        "X25519:P-256:P-521:P-384"
-      ],
+      "secret_key": "secret-data-internal-secret",
+      "secret_name": "spiffe://{{ global.spire.trust_domain }}/data-internal",
+      "secret_validation_name": "spiffe://{{ global.spire.trust_domain }}",
       "subject_names": [
-        "spiffe://{{ global.spire.trust_domain }}/internal-jwt-security"
+        "spiffe://{{ global.spire.trust_domain }}/edge"
+    ],
+      "ecdh_curves": [
+          "X25519:P-256:P-521:P-384"
       ]
     },
+    {% elif global.secret.enabled is sameas true %}
+    "require_tls": true,
+    "ssl_config": {
+      "require_client_certs": true,
+      "trust_file": "{{ values.idata.secret.secret_keys.ca }}",
+      "cert_key_pairs": [
+        {
+          "certificate_path": "{{ values.idata.secret.secret_keys.cert }}",
+          "key_path": "{{ values.idata.secret.secret_keys.key }}"
+        }
+      ]
+    },
+    {% endif %}
+    "instances": [
+    {
+        "host": "gm_ijwt.greymatter",
+        "port": 8080
+    }
+    ],
     "circuit_breakers": null,
     "outlier_detection": null,
     "health_checks": []

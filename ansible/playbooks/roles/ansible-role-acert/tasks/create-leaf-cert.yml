@@ -17,9 +17,9 @@
     extra_opts: [--strip-components=1]
     remote_src: yes
 
-- name: Check if {{ acert_service }}-leaf already exist
+- name: Check if {{ acert_service }} leaf already exist
   shell: |
-    HOME="{{ acert_home_dir }}/" /usr/local/bin/acert leaves list | grep {{ acert_service }}-leaf
+    HOME="{{ acert_home_dir }}/" /usr/local/bin/acert leaves list | grep {{ acert_service }}
   register: leaf_service_status
   ignore_errors: yes
 
@@ -31,11 +31,11 @@
 
 - name: Create leaf authority for {{ acert_service }}
   shell: |
-    HOME="{{ acert_home_dir }}/" /usr/local/bin/acert authorities issue "{{ rootCA_fingerprint_service.stdout }}" -n {{ acert_service }}-leaf
+    HOME="{{ acert_home_dir }}/" /usr/local/bin/acert authorities issue "{{ rootCA_fingerprint_service.stdout }}" -n {{ acert_service }}
   register: leaf_fingerprint
   when: leaf_service_status.rc != 0
 
-- name: Extract {{ acert_service }}-leaf authority, cert and key
+- name: Extract {{ acert_service }} leaf authority, cert and key
   shell: |
     HOME="{{ acert_home_dir }}/" /usr/local/bin/acert leaves export "{{ leaf_fingerprint.stdout }}" -f pem -t authority >> "{{ acert_home_dir }}"/{{ acert_service }}-leaf-authority.pem
     HOME="{{ acert_home_dir }}/" /usr/local/bin/acert leaves export "{{ leaf_fingerprint.stdout }}" -f pem -t certificate >> "{{ acert_home_dir }}"/{{ acert_service }}-leaf-certificate.pem

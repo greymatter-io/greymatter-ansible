@@ -126,5 +126,5 @@
 - name: Confirm Service is Running
   command: "systemctl status {{ systemd_service }}.service"
   register: service_status
-  failed_when: "'running' not in service_status.stdout"
+  failed_when: "'running' not in service_status.stdout or 'error' in service_status.stdout"
   changed_when: False
