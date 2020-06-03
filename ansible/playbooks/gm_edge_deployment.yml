@@ -1,15 +1,5 @@
 ---
 
-# Create edge configs
-- hosts: tag_Name_gm_control_api
-  user: ubuntu
-  become: yes
-  roles:
-    - ansible-role-config
-  vars:
-    edge_proxy_config: true
-    SERVICE_NAME: edge
-
 # Run edge proxy
 - hosts: tag_Name_gm_edge
   user: ubuntu

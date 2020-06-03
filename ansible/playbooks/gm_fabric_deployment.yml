@@ -6,15 +6,13 @@
   become: yes
   roles:
     - ansible-role-preparatory
-    - ansible-role-proxy
     - ansible-role-control-api
     - ansible-role-gmcli
     - ansible-role-config
   vars:
-    XDS_CLUSTER: control-api
-    XDS_HOST: gm_control.greymatter
     service_config: true
     value_edge_config: true
+    edge_proxy_config: true
     SERVICE_NAME: control-api
     SERVICE_HOST_DNS: gm_control_api.greymatter
     GLOBAL_SECRET_ENABLED: true
@@ -36,3 +34,13 @@
   vars:
     config: "{{ lookup('file', '../group_vars/tf_ansible_vars_file.yml') | from_yaml }}"
     GM_CONTROL_AWS_VPC_ID: "{{ config.tf_vpc_id }}"
+
+# Run gm-control-api sidecar proxy
+- hosts: tag_Name_gm_control_api
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-proxy
+  vars:
+    XDS_CLUSTER: control-api
+    XDS_HOST: gm_control.greymatter

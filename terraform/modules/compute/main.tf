@@ -16,7 +16,7 @@ data "aws_ami" "ubuntu" {
 
 module "ssh_key_pair" {
   source                = "git::https://github.com/cloudposse/terraform-aws-key-pair.git?ref=master"
-  name                  = "greymatter_key"
+  name                  = "greymatterkey"
   ssh_public_key_path   = "secrets"
   generate_ssh_key      = "true"
   private_key_extension = ".pem"
