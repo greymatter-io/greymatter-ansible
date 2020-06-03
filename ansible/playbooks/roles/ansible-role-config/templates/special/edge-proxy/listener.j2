@@ -4,10 +4,17 @@
   "domain_keys": ["edge", "edge-egress"],
   "name": "edge",
   "ip": "0.0.0.0",
-  "port": 10808,
+  "port": 8080,
   "protocol": "http_auto",
   "tracing_config": null,
-  "active_http_filters": ["gm.metrics", "gm.inheaders", "gm.jwtsecurity", "envoy.rbac"],
+  "active_http_filters": [
+    "gm.metrics",
+    "gm.inheaders",
+    {% if listener.jwt_filter.enabled is sameas true %}
+    "gm.jwtsecurity",
+    {% endif %}
+    "envoy.rbac"
+  ],
   "http_filters": {
     "gm_inheaders": {},
     "gm_metrics": {
@@ -20,6 +27,24 @@
       "metrics_key_function": "depth",
       "metrics_key_depth": "5"
     },
+    {% if listener.jwt_filter.enabled is sameas true %}
+    "gm_jwtsecurity": {
+      {% if global.spire.enabled is sameas true %}
+      "apiKey": "{{ global.jwt_api_key }}",
+      "endpoint": "http://localhost:10909/jwt",
+      "jwtHeaderName": "userpolicy"
+      {% else %}
+      "apiKey": "{{ global.jwt_api_key }}",
+      "endpoint": "https://localhost:10909/jwt",
+      "jwtHeaderName": "userpolicy"{% if values.edge.egress.secret.enabled is sameas true %},
+      "useTls": true,
+      "caPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.ca }}",
+      "certPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.cert }}",
+      "keyPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.key }}",
+      "insecureSkipVerify": true{% endif %}
+      {% endif %}
+    },
+    {% endif %}
     "envoy_rbac": {
       "rules": {
           "action": 0,
@@ -48,22 +73,6 @@
               }
           }
       }
-  },
-    "gm_jwtsecurity": {
-      {% if global.spire.enabled is sameas true %}
-      "apiKey": "{{ global.jwt_api_key }}",
-      "endpoint": "http://localhost:10909/jwt",
-      "jwtHeaderName": "userpolicy"
-      {% else %}
-      "apiKey": "{{ global.jwt_api_key }}",
-      "endpoint": "https://localhost:10909/jwt",
-      "jwtHeaderName": "userpolicy"{% if values.edge.egress.secret.enabled is sameas true %},
-      "useTls": true,
-      "caPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.ca }}",
-      "certPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.cert }}",
-      "keyPath": "{{ values.edge.egress.secret.mount_point }}/{{ values.edge.egress.secret.secret_keys.key }}",
-      "insecureSkipVerify": true{% endif %}
-      {% endif %}
-    }
+  }
   }
 }

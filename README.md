@@ -49,8 +49,3 @@ Or to deploy individual services add '--tags "service_a,service_b"'
 #### Destroy Greymatter ####
 
 ansible-playbook playbooks/greymatter_destroy.yml
-
-
-
-
-

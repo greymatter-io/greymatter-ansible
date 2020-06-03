@@ -7,6 +7,10 @@ resource "aws_vpc" "vpc" {
   tags = {
     Name = "gm_vpc"
   }
+
+  provisioner "local-exec" {
+    command = "echo gm_control_vpc_id: {${aws_vpc.vpc.id}} >> ../ansible/playbooks/roles/ansible-role-control/defaults/main.yml"
+  }
 }
 
 data "aws_availability_zones" "available" {}

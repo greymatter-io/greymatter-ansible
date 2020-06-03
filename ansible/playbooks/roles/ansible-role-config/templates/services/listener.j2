@@ -34,16 +34,17 @@
   {% endif %}
   "active_http_filters": [
     {% if listener.gm_metric.enabled is sameas true %}
-    "gm.metrics",
+    "gm.metrics"
     {% endif %}
-    {% if listener.gm_observables.enabled is sameas true %}
-    "gm.observables",
+    {% if listener.gm_observables.enabled is sameas true %},
+    "gm.observables"
     {% endif %}
-    {% if listener.envoy_rbac.enabled is sameas true %}
+    {% if listener.envoy_rbac.enabled is sameas true %},
     "envoy.rbac"
     {% endif %}
   ],
   "http_filters": {
+    {% if global.spire.enabled is sameas true %}
     "envoy_rbac": {
       "rules": {
           "action": 0,
@@ -91,7 +92,8 @@
               }
           }
       }
-  },
+    },
+    {% endif %} 
     "gm_metrics": {
       "metrics_port": 8081,
       "metrics_host": "0.0.0.0",

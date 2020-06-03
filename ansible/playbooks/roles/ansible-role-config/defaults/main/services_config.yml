@@ -57,7 +57,9 @@ listener:
     eventTopic: "greymatter"
     kafkaServerConnection: "kafkaServerConnection"
   envoy_rbac:
-    enabled: true
+    enabled: false
+  jwt_filter:
+    enabled: false
 
 # Proxy config values
 proxy:
