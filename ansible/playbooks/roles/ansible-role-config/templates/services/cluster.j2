@@ -8,6 +8,19 @@
         "port": {{ CLUSTER_PORT | default(cluster.port) }}
     }
   ],
+  {% if global.secret.enabled is sameas true %}
+  "require_tls": true,
+  "ssl_config": {
+    "require_client_certs": true,
+    "trust_file": "{{ global.secret.ssl_config_trust_file }}",
+    "cert_key_pairs": [
+      {
+        "certificate_path": "{{ global.secret.ssl_config_certificate_path }}",
+        "key_path": "{{ global.secret.ssl_config_key_path }}"
+      }
+    ]
+  },
+  {% endif %}
   "circuit_breakers": null,
   "outlier_detection": null,
   "health_checks": []

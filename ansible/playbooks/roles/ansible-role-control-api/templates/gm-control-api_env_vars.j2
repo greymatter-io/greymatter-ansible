@@ -6,3 +6,7 @@ GM_CONTROL_API_ORG_KEY=deciphernow
 GM_CONTROL_API_PERSISTER_TYPE=file
 GM_CONTROL_API_PERSISTER_PATH=/var/gm-control-api/gm_control_api_backend.json
 GM_CONTROL_API_ZONE_NAME={{ GM_CONTROL_API_ZONE_NAME | default('zone-default-zone') }}
+GM_CONTROL_API_CA_CERT_PATH={{ SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/ca.crt') }}
+GM_CONTROL_API_SERVER_CERT_PATH={{ SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/server.crt') }}
+GM_CONTROL_API_SERVER_KEY_PATH={{ SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/server.key') }}
+GM_CONTROL_API_USE_TLS={{ GLOBAL_SECRET_ENABLED | default('false') }}

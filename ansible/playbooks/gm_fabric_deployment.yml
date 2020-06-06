@@ -15,7 +15,7 @@
     edge_proxy_config: true
     SERVICE_NAME: control-api
     SERVICE_HOST_DNS: gm_control_api.greymatter
-    GLOBAL_SECRET_ENABLED: true
+    GLOBAL_SECRET_ENABLED: false
     SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/gm-control-api-leaf-authority.pem
     SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-control-api-leaf-certificate.pem
     SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-control-api-leaf-key.pem
@@ -34,6 +34,9 @@
   vars:
     config: "{{ lookup('file', '../group_vars/tf_ansible_vars_file.yml') | from_yaml }}"
     GM_CONTROL_AWS_VPC_ID: "{{ config.tf_vpc_id }}"
+    GLOBAL_SECRET_ENABLED: false
+    SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/gm-control-leaf-certificate.pem
+    SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/gm-control-leaf-key.pem
 
 # Run gm-control-api sidecar proxy
 - hosts: tag_Name_gm_control_api

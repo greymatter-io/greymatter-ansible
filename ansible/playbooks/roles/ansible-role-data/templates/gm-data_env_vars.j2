@@ -13,7 +13,7 @@ GMDATA_TRUST={{ GMDATA_TRUST | default(base64_values.results[2].content) }}
 GMDATA_CERT={{ GMDATA_CERT | default(base64_values.results[0].content) }}
 GMDATA_KEY={{ GMDATA_KEY | default(base64_values.results[1].content) }}
 CLIENT_PREFIX=/services/data/latest
-CLIENT_JWT_PREFIX=/
+CLIENT_JWT_PREFIX=/jwt
 JWT_PUB={{ JWT_PUB | default(base64_values.results[3].content) }}
 JWT_API_KEY={{ JWT_API_KEY | default('dm9sY2Fuby1lcGlkZW1pYy10d2VsZnRoLXRhbWFsZQ==') }}
 CLIENT_JWT_ENDPOINT_USE_TLS={{ CLIENT_JWT_ENDPOINT_USE_TLS | default('true') }}

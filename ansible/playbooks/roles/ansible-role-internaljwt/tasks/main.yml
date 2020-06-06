@@ -27,7 +27,7 @@
   loop:
     - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-certificate.pem' }
     - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-key.pem' }
-    - { src: '/etc/proxy/tls/sidecar/rootCA-authority.pem' }
+    - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-authority.pem' }
     - { src: '/tmp/ijwt_secrets/jwtES512.key' }
   tags: ijwt
 

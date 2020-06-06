@@ -1,5 +1,35 @@
 ---
 
+- name: Create acert rootCA
+  include_role:
+    name: ansible-role-acert
+    apply:
+      tags:
+        - control
+  vars:
+    create_rootCA: true
+  tags: control
+
+- name: Create gm-control leaf certs
+  include_role:
+    name: ansible-role-acert
+    apply:
+      tags:
+        - control
+  vars:
+    acert_service: gm-control
+  tags: control
+
+- name: Extract base64 values of ssl certs
+  slurp:
+    src: "{{ item.src }}"
+  register: base64_values
+  loop:
+    - { src: '/etc/proxy/tls/sidecar/gm-control-leaf-certificate.pem' }
+    - { src: '/etc/proxy/tls/sidecar/gm-control-leaf-key.pem' }
+    - { src: '/etc/proxy/tls/sidecar/gm-control-leaf-authority.pem' }
+  tags: control
+
 - name: Run gm-control binary as a service
   include_role:
     name: ansible-role-systemd
@@ -8,3 +38,4 @@
       tags:
         - control
   tags: control
+

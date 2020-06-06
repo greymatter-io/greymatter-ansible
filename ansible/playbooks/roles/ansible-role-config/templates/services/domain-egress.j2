@@ -7,7 +7,19 @@
   "gzip_enabled": false,
   "cors_config": null,
   "aliases": null,
-  "force_https": false,
+  {% if global.secret.enabled is sameas true %}
+  "ssl_config": {
+    "require_client_certs": true,
+    "trust_file": "{{ global.secret.ssl_config_trust_file }}",
+    "cert_key_pairs": [
+      {
+        "certificate_path": "{{ global.secret.ssl_config_certificate_path }}",
+        "key_path": "{{ global.secret.ssl_config_key_path }}"
+      }
+    ]
+  },
+  "force_https": true,
+  {% endif %}
   "custom_headers": [
     {
       "key": "x-forwarded-proto",

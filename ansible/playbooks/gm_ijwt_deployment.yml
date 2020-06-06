@@ -17,6 +17,7 @@
     EDGE_SSL_CONFIG_TRUST_FILE: /etc/proxy/tls/sidecar/edge-leaf-authority.pem
     EDGE_SSL_CONFIG_CERTIFICATE_PATH: /etc/proxy/tls/sidecar/edge-leaf-certificate.pem
     EDGE_SSL_CONFIG_KEY_PATH: /etc/proxy/tls/sidecar/edge-leaf-key.pem
+    CLUSTER_PORT: 9443
 
 # Run internal jwt and its sidecar
 - hosts: tag_Name_gm_ijwt
@@ -30,3 +31,6 @@
   vars:
     XDS_CLUSTER: internal-jwt-security
     XDS_HOST: gm_control.greymatter
+    CLIENT_JWT_ENDPOINT_PORT: 9443
+    CLIENT_JWT_ENDPOINT_USE_TLS: true
+    CLIENT_JWT_ENDPOINT_ADDRESS: 'localhost'
