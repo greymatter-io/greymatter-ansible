@@ -51,7 +51,7 @@
   vars:
     config: "{{ lookup('file', '../group_vars/tf_ansible_vars_file.yml') | from_yaml }}"
     GM_CONTROL_AWS_VPC_ID: "{{ config.tf_vpc_id }}"
-  # tags: gm_fabric
+  tags: gm_fabric
 
 # Run gm-control-api sidecar
 - hosts: tag_Name_gm_control_api
@@ -59,7 +59,17 @@
   become: yes
   roles:
   - { role: ansible-role-proxy, XDS_CLUSTER: control-api, XDS_HOST: gm_control.greymatter }
-  # tags: gm_fabric
+  tags: gm_fabric
+
+# Run gm-edge
+- hosts: tag_Name_gm_edge
+  user: ubuntu
+  become: yes
+  roles:
+  - ansible-role-preparatory
+  - { role: ansible-role-certs, service: edge }
+  - { role: ansible-role-proxy, XDS_CLUSTER: edge, XDS_HOST: gm_control.greymatter }
+  tags: gm_edge
 
 # Run internal jwt and its sidecar
 - hosts: tag_Name_gm_ijwt
