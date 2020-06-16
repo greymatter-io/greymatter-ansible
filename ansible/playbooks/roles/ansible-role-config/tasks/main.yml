@@ -2,20 +2,32 @@
 
 - name: Run service_json_configs task to create {{ global.service_name }} config jsons
   include: service_json_configs.yml
-  when: service_config 
-  tags: config
-
-- name: Run edge_json_configs task to create edge config jsons
-  include: edge_json_configs.yml
-  when: value_edge_config
-  tags: config
-
-- name: Run special_json_configs task to create special config jsons
-  include: special_json_configs.yml
-  when: special_config
-  tags: config
+  vars:
+    SERVICE_NAME: "{{ line_item.0 }}"
+    SERVICE_HOST_DNS: "{{ line_item.1 }}"
+    CLUSTER_PORT: "{{ line_item.2 }}"
+  with_together:
+    - "{{ SERVICE_NAME_VALUES }}"
+    - "{{ SERVICE_HOST_DNS_VALUES }}"
+    - "{{ CLUSTER_PORT_VALUES }}"
+  loop_control:
+    loop_var: line_item
 
 - name: Run special_json_configs task to create edge proxy config jsons
   include: edge_proxy_json_configs.yml
-  when: edge_proxy_config
-  tags: config
+  vars:
+    SERVICE_NAME: edge
+
+- name: Run edge_json_configs task to create edge config jsons
+  include: edge_json_configs.yml
+  vars:
+    SERVICE_NAME: "{{ line_item }}"
+  with_items:
+    - "{{ SERVICE_NAME_VALUES }}"
+  loop_control:
+    loop_var: line_item
+
+- name: Run special_json_configs task to create special config jsons
+  include: special_json_configs.yml
+  vars:
+    SERVICE_NAME: special

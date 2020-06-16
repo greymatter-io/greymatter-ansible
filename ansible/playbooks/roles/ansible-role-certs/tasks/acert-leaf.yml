@@ -1,0 +1,45 @@
+---
+
+- name: Copy rootCA files from local to server
+  copy:
+    src: "files/sidecar.tgz"
+    dest: "/tmp"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    mode: u=rwx,g=rx,o=rx
+  when: '"gm-control-api" not in service'
+
+- name: Extract Service Tar
+  unarchive:
+    src: "/tmp/sidecar.tgz"
+    dest: "{{ certs_home_dir }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    extra_opts: [--strip-components=1]
+    remote_src: yes
+  when: '"gm-control-api" not in service'
+
+- name: Check if {{ service }} leaf already exist
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert leaves list | grep {{ service }}
+  register: leaf_service_status
+  ignore_errors: yes
+
+- name: Extract rootCA authority fingerprint
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities list | grep rootCA | sed -e 's/\s.*$//'
+  register: rootCA_fingerprint_service
+  when: leaf_service_status.rc != 0
+
+- name: Create leaf authority for {{ service }}
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities issue "{{ rootCA_fingerprint_service.stdout }}" -n {{ service }}
+  register: leaf_fingerprint
+  when: leaf_service_status.rc != 0
+
+- name: Extract {{ service }} leaf authority, cert and key
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert leaves export "{{ leaf_fingerprint.stdout }}" -f pem -t authority >> "{{ certs_home_dir }}"/{{ service }}-leaf-authority.pem
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert leaves export "{{ leaf_fingerprint.stdout }}" -f pem -t certificate >> "{{ certs_home_dir }}"/{{ service }}-leaf-certificate.pem
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert leaves export "{{ leaf_fingerprint.stdout }}" -f pem -t key >> "{{ certs_home_dir }}"/{{ service }}-leaf-key.pem
+  when: leaf_service_status.rc != 0

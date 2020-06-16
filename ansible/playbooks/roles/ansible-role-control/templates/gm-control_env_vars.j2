@@ -3,10 +3,10 @@
 GM_CONTROL_CONSOLE_LEVEL=info
 GM_CONTROL_API_KEY=xxxx
 GM_CONTROL_API_ZONE_NAME={{ GM_CONTROL_API_ZONE_NAME | default('zone-default-zone') }}
-GM_CONTROL_API_SSL={{ GLOBAL_SECRET_ENABLED | default('false') }}
+GM_CONTROL_API_SSL={{ GLOBAL_SECRET_ENABLED | default('true') }}
 GM_CONTROL_API_INSECURE=true
-GM_CONTROL_API_SSLCERT={{ SSL_CONFIG_CERTIFICATE_PATH | default('/service-certs/server.crt') }}
-GM_CONTROL_API_SSLKEY={{ SSL_CONFIG_KEY_PATH | default('/service-certs/server.key') }}
+GM_CONTROL_API_SSLCERT={{ SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/control.crt') }}
+GM_CONTROL_API_SSLKEY={{ SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/control.key') }}
 GM_CONTROL_API_HOST={{ GM_CONTROL_API_HOST | default('gm_control_api.greymatter') }}:5555
 GM_CONTROL_CMD={{ GM_CONTROL_CMD | default('aws') }}
 GM_CONTROL_FILE_FORMAT=yaml

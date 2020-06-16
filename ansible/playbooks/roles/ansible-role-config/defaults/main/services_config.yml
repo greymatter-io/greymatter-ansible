@@ -15,9 +15,9 @@ global:
   secret:
     enabled: "{{ GLOBAL_SECRET_ENABLED | default(false) }}"
     ssl_require_client_certs: true
-    ssl_config_trust_file: "{{ SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/ca.crt') }}"
-    ssl_config_certificate_path: "{{ SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/server.crt') }}"
-    ssl_config_key_path: "{{ SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/server.key') }}"
+    ssl_config_trust_file: "{{ SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/rootCA.crt') }}"
+    ssl_config_certificate_path: "{{ SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/'+SERVICE_NAME+'.crt') }}"
+    ssl_config_key_path: "{{ SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/'+SERVICE_NAME+'.key') }}"
   rbac:
     admin:
       header_name: user_dn

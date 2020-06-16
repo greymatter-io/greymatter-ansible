@@ -6,31 +6,41 @@ special_config: false
 # Path where configs are saved
 special_config_dir: /etc/special-configs
 
+# Special edge-proxy configs
+edge_proxy_config: false
+edge_proxy_config_dir: /etc/edge-proxy-configs
+
+# Service edge config jsons creation flag
+value_edge_config: false
+
+# Path where service edge configs are saved
+edge_config_dir: /etc/edge-configs/{{ global.service_name }}
+
 values:
     edge_config:
         secret:
             enabled: "{{ EDGE_GLOBAL_SECRET_ENABLED | default(false) }}"
             edge_ssl_require_client_certs: true
-            edge_ssl_config_trust_file: "{{ EDGE_SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/ca.crt') }}"
-            edge_ssl_config_certificate_path: "{{ EDGE_SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/server.crt') }}"
-            edge_ssl_config_key_path: "{{ EDGE_SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/server.key') }}"
+            edge_ssl_config_trust_file: "{{ EDGE_SSL_CONFIG_TRUST_FILE | default('/etc/proxy/tls/sidecar/rootCA.crt') }}"
+            edge_ssl_config_certificate_path: "{{ EDGE_SSL_CONFIG_CERTIFICATE_PATH | default('/etc/proxy/tls/sidecar/edge.crt') }}"
+            edge_ssl_config_key_path: "{{ EDGE_SSL_CONFIG_KEY_PATH | default('/etc/proxy/tls/sidecar/edge.key') }}"
     edge:
         egress:
             secret:
                 enabled: true
                 mount_point: /etc/proxy/tls/sidecar
                 secret_keys:
-                    cert: edge-leaf-certificate.pem
-                    key: edge-leaf-key.pem
-                    ca: edge-leaf-authority.pem
+                    cert: edge.crt
+                    key: edge.key
+                    ca: rootCA.crt
         ingress:
             secret:
                 enabled: true
                 mount_point: /etc/proxy/tls/edge
                 secret_keys:
-                    cert: edge-leaf-certificate.pem
-                    key: edge-leaf-key.pem
-                    ca: edge-leaf-authority.pem
+                    cert: edge.crt
+                    key: edge.key
+                    ca: rootCA.crt
     catalog:
         catalogEnabled: true
         controlEnabled: true
@@ -52,9 +62,9 @@ values:
             mount_point: /etc/proxy/tls/sidecar
             insecure: true
             secret_keys:
-                cert: /etc/proxy/tls/sidecar/gm-catalog-leaf-certificate.pem
-                key: /etc/proxy/tls/sidecar/gm-catalog-leaf-key.pem
-                ca: /etc/proxy/tls/sidecar/gm-catalog-leaf-authority.pem
+                cert: /etc/proxy/tls/sidecar/catalog.crt
+                key: /etc/proxy/tls/sidecar/catalog.key
+                ca: /etc/proxy/tls/sidecar/rootCA.crt
         # routes:
         #     - '/services/catalog/{{ catalog.version }}'
         #     - '/services/catalog/{{ catalog.version }}/'
@@ -81,9 +91,9 @@ values:
             mount_point: /etc/proxy/tls/sidecar
             insecure: true
             secret_keys:
-                cert: /etc/proxy/tls/sidecar/gm-data-leaf-certificate.pem
-                key: /etc/proxy/tls/sidecar/gm-data-leaf-key.pem
-                ca: /etc/proxy/tls/sidecar/gm-data-leaf-authority.pem
+                cert: /etc/proxy/tls/sidecar/data-internal.crt
+                key: /etc/proxy/tls/sidecar/data-internal.key
+                ca: /etc/proxy/tls/sidecar/rootCA.crt
     data:
         catalogEnabled: true
         controlEnabled: true

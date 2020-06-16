@@ -2,6 +2,8 @@
 
 systemd_service: gm-control-api
 
+service: gm-control-api
+
 nexus_repo_url: "https://nexus.production.deciphernow.com"
 nexus_repo: "repository/raw-dev/greymatter"
 nexus_tar_file: "gm-control-api-v1.4.0.tar.gz"

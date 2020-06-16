@@ -1,0 +1,38 @@
+---
+
+- name: Check if rootCA authority already exist
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities list | grep rootCA
+  register: rootCA_authority_status
+  ignore_errors: yes
+
+- name: Create  rootCA ascert authority
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities create -n rootCA
+  when: rootCA_authority_status.rc != 0
+
+- name: Update .acert dir permissions
+  file:
+    path: "{{ certs_home_dir }}/.acert"
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    recurse: yes
+
+- name: Extract rootCA authority fingerprint
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities list | grep rootCA | sed -e 's/\s.*$//'
+  register: "rootCA_fingerprint"
+  when: rootCA_authority_status.rc != 0
+
+- name: Extract rootCA authority, cert and key
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities export "{{ rootCA_fingerprint.stdout }}" -f pem -t authority >> "{{ certs_home_dir }}"/rootCA-authority.pem
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities export "{{ rootCA_fingerprint.stdout }}" -f pem -t certificate >> "{{ certs_home_dir }}"/rootCA-certificate.pem
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities export "{{ rootCA_fingerprint.stdout }}" -f pem -t key >> "{{ certs_home_dir }}"/rootCA-key.pem
+  when: rootCA_authority_status.rc != 0
+
+- name: Save rootCA authority fingerprint
+  shell: |
+    HOME="{{ certs_home_dir }}/" /usr/local/bin/acert authorities list | grep rootCA | sed -e 's/\s.*$//' >> "{{ certs_home_dir }}"/rootCA-fingerprint
+  when: rootCA_authority_status.rc != 0

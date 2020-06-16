@@ -1,0 +1,24 @@
+---
+
+- name: Check if rootCA already exist
+  stat:
+    path: "{{ certs_home_dir }}/rootCA.key"
+  register: rootCA_status
+
+- name: Create rootCA
+  shell: |
+    openssl req -nodes -x509 -newkey rsa:2048 -keyout {{ certs_home_dir }}/rootCA.key -out {{ certs_home_dir }}/rootCA.crt -subj "/C=US/ST=Virginia/L=Alexandria/OU=root/CN=root"
+  when: not rootCA_status.stat.exists
+
+- name: Compress directory {{ certs_home_dir }} into {{ certs_home_dir }}.tgz
+  archive:
+    path: "{{ certs_home_dir }}"
+    dest: "{{ certs_home_dir }}.tgz"
+  when: not rootCA_status.stat.exists
+
+- name: Download rootCA authority content
+  fetch:
+    src: "{{ certs_home_dir }}.tgz"
+    dest: roles/ansible-role-certs/files/
+    flat: yes
+  when: not rootCA_status.stat.exists

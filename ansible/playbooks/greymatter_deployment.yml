@@ -1,5 +1,6 @@
 ---
 
+# Create infrastructure
 - hosts: localhost
   roles:
     - ansible-role-terraform
@@ -7,6 +8,7 @@
     deploy_infrastructure: true
   tags: gm_infra
 
+# Refresh inventory
 - name: Refresh inventory
   hosts: localhost
   gather_facts: False
@@ -15,28 +17,95 @@
       meta: refresh_inventory
   tags: gm_infra
 
-- import_playbook: gm_fabric_deployment.yml
-  tags: gm_fabric
-
-- import_playbook: gm_edge_deployment.yml
-  tags: gm_edge
-
-- import_playbook: gm_ijwt_deployment.yml
-  tags: gm_ijwt
-
-- import_playbook: gm_idata_deployment.yml
-  tags: gm_idata
-
-- import_playbook: gm_catalog_deployment.yml
-  tags: gm_catalog
-
-# Create special configs
+# Run gm-control-api and create configs
 - hosts: tag_Name_gm_control_api
   user: ubuntu
   become: yes
   roles:
-    - ansible-role-config
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, create_rootCA: true, service: control-api }
+    - ansible-role-control-api
+    - ansible-role-gmcli
+  tasks:
+    - name: Create greymatter configs
+      include_role:
+        name: ansible-role-config
+        apply:
+          tags: gm_config
+      vars:
+        GLOBAL_SECRET_ENABLED: true
+        SERVICE_NAME_VALUES: [ 'control-api', 'internal-jwt-security', 'data-internal', 'catalog' ]
+        SERVICE_HOST_DNS_VALUES: [ 'gm_control_api.greymatter', 'gm_ijwt.greymatter', 'gm_idata.greymatter', 'gm_catalog.greymatter' ]
+        CLUSTER_PORT_VALUES: [ 5555, 9443, 9080, 9080 ]
+      tags: gm_config
+  tags: gm_fabric
+
+# Run gm-control
+- hosts: tag_Name_gm_control
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, service: control }
+    - ansible-role-control
   vars:
-    GLOBAL_SECRET_ENABLED: true
-    special_config: true
-  tags: gm_special_config
+    config: "{{ lookup('file', '../group_vars/tf_ansible_vars_file.yml') | from_yaml }}"
+    GM_CONTROL_AWS_VPC_ID: "{{ config.tf_vpc_id }}"
+  # tags: gm_fabric
+
+# Run gm-control-api sidecar
+- hosts: tag_Name_gm_control_api
+  user: ubuntu
+  become: yes
+  roles:
+  - { role: ansible-role-proxy, XDS_CLUSTER: control-api, XDS_HOST: gm_control.greymatter }
+  # tags: gm_fabric
+
+# Run internal jwt and its sidecar
+- hosts: tag_Name_gm_ijwt
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, service: internal-jwt-security }
+    - ansible-role-redis
+    - ansible-role-internaljwt
+    - ansible-role-proxy
+  vars:
+    XDS_CLUSTER: internal-jwt-security
+    XDS_HOST: gm_control.greymatter
+    CLIENT_JWT_ENDPOINT_PORT: 9443
+    CLIENT_JWT_ENDPOINT_USE_TLS: true
+    CLIENT_JWT_ENDPOINT_ADDRESS: 'localhost'
+  tags: gm_ijwt
+
+# Run gm-data and its sidecar
+- hosts: tag_Name_gm_idata
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, service: data-internal }
+    - ansible-role-incert
+    - ansible-role-mongodb
+    - { role: ansible-role-ijwt-secrets, fetch_ijwt_secret: yes}
+    - { role: ansible-role-data, service: data-internal}
+    - ansible-role-proxy
+  vars:
+    XDS_CLUSTER: data-internal
+    XDS_HOST: gm_control.greymatter
+  tags: gm_idata
+
+# Run gm-catalog and its sidecar
+- hosts: tag_Name_gm_catalog
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, service: catalog }
+    - ansible-role-proxy
+    - ansible-role-catalog
+  vars:
+    XDS_CLUSTER: catalog
+    XDS_HOST: gm_control.greymatter
+  tags: gm_catalog

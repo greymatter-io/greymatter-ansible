@@ -1,48 +1,27 @@
 ---
 
-- name: Create gm-ijwt leaf certs
-  include_role:
-    name: ansible-role-acert
-    apply:
-      tags:
-        - ijwt
-  vars:
-    acert_service: gm-ijwt
-  tags: ijwt
-
 - name: Create ijwt-secrets
   include_role:
     name: ansible-role-ijwt-secrets
-    apply:
-      tags:
-        - ijwt
   vars:
     create_ijwt_secret: yes
-  tags: ijwt
 
 - name: Extract base64 values of ssl certs
   slurp:
     src: "{{ item.src }}"
   register: base64_values
   loop:
-    - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-certificate.pem' }
-    - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-key.pem' }
-    - { src: '/etc/proxy/tls/sidecar/gm-ijwt-leaf-authority.pem' }
+    - { src: /etc/proxy/tls/sidecar/internal-jwt-security.crt }
+    - { src: '/etc/proxy/tls/sidecar/internal-jwt-security.key' }
+    - { src: '/etc/proxy/tls/sidecar/rootCA.crt' }
     - { src: '/tmp/ijwt_secrets/jwtES512.key' }
-  tags: ijwt
 
 # Restart redis server. Otherwise get connection error
 - name: Restart Redis server
   service: 
     name: redis-server
     state: restarted 
-  tags: ijwt
 
 - name: Create and run gm-jwt-security binary as a service
   include_role:
     name: ansible-role-systemd
-    public: yes
-    apply:
-      tags:
-        - ijwt
-  tags: ijwt

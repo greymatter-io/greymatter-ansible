@@ -1,0 +1,11 @@
+---
+
+service_user: gmuser
+service_group: gmuser
+certs_home_dir: /etc/proxy/tls/sidecar
+
+create_rootCA: false
+
+service:
+
+use_acert: false

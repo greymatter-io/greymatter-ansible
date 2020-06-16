@@ -1,32 +1,15 @@
 ---
 
-- name: Create gm-catalog leaf certs
-  include_role:
-    name: ansible-role-acert
-    apply:
-      tags:
-        - catalog
-  vars:
-    acert_service: gm-catalog
-  tags: catalog
-
 - name: Extract base64 values of ssl certs
   slurp:
     src: "{{ item.src }}"
-  register: base64_values
   loop:
-    - { src: '/etc/proxy/tls/sidecar/gm-catalog-leaf-certificate.pem' }
-    - { src: '/etc/proxy/tls/sidecar/gm-catalog-leaf-key.pem' }
-    - { src: '/etc/proxy/tls/sidecar/gm-catalog-leaf-authority.pem' }
-  tags: catalog
+    - { src: '/etc/proxy/tls/sidecar/catalog.crt' }
+    - { src: '/etc/proxy/tls/sidecar/catalog.key' }
+    - { src: '/etc/proxy/tls/sidecar/rootCA.crt' }
+  register: base64_values
 
 - name: Create and run gm-catalog binary as a service
   include_role:
     name: ansible-role-systemd
-    public: yes
-    apply:
-      tags:
-        - catalog
-  when: ( ansible_distribution == 'Ubuntu' )
-  tags: catalog
   

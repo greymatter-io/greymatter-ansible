@@ -2,8 +2,8 @@
 *.tfstate
 *.tfstate.backup
 *.tfstate.lock.info
-!ansible/playbooks/roles/ansible-role-acert/files/acert
-ansible/playbooks/roles/ansible-role-acert/files/*
+!ansible/playbooks/roles/ansible-role-certs/files/acert
+ansible/playbooks/roles/ansible-role-certs/files/*
 ansible/playbooks/roles/ansible-role-ijwt-secrets/files/*
 ansible/group_vars/tf_ansible_vars_file.yml
 

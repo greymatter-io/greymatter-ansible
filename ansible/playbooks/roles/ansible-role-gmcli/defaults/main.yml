@@ -11,12 +11,12 @@ gmcli_env_vars:
   - key: GREYMATTER_API_PREFIX 
     value : ''
   - key: GREYMATTER_API_SSL 
-    value : 'false' 
+    value : 'true' 
   - key: GREYMATTER_API_INSECURE
     value : 'true'
   - key: GREYMATTER_API_SSLCERT 
-    value : "/path/to/my.crt"
-  - key: GREYMATTER_API_SSLCERT 
-    value : "/path/to/my.key"
+    value : "/etc/proxy/tls/sidecar/control-api.crt"
+  - key: GREYMATTER_API_SSLKEY
+    value : "/etc/proxy/tls/sidecar/control-api.key"
   - key: EDITOR 
     value : "vim"

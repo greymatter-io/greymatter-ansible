@@ -1,0 +1,35 @@
+---
+
+- name: Create certs home directory
+  file:
+    path: "{{ certs_home_dir }}"
+    state: directory
+    mode: u=rwx,g=rwx,o=rwx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    recurse: yes
+
+- name: Add acert binary
+  copy:
+    src: acert
+    dest: /usr/local/bin
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    mode: u=rwx,g=rx,o=rx
+  when: use_acert
+
+- name: Include acert-rootCA.yml
+  include: acert-rootCA.yml
+  when: use_acert
+
+- name: Include acert-leaf.yml
+  include: acert-leaf.yml
+  when: use_acert and service is defined
+
+- name: Include create-rootCA.yml
+  include: create-rootCA.yml
+  when: create_rootCA
+
+- name: Include create-service-cert.yml
+  include: create-service-cert.yml
+  when: service is defined

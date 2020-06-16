@@ -1,0 +1,48 @@
+---
+
+- name: Copy rootCA files from local to server
+  copy:
+    src: "files/sidecar.tgz"
+    dest: "/tmp"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    mode: u=rwx,g=rx,o=rx
+  when: '"gm-control-api" not in service'
+
+- name: Extract Service Tar
+  unarchive:
+    src: "/tmp/sidecar.tgz"
+    dest: "{{ certs_home_dir }}"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    extra_opts: [--strip-components=1]
+    remote_src: yes
+  when: '"gm-control-api" not in service'
+
+- name: Generate {{ service }} ssl private key
+  openssl_privatekey:
+    path: "{{ certs_home_dir }}/{{ service }}.key"
+
+- name: Generate {{ service }} ssl csr
+  openssl_csr:
+    path: "{{ certs_home_dir }}/{{ service }}.csr"
+    privatekey_path: "{{ certs_home_dir }}/{{ service }}.key"
+    country_name: US
+    organization_name: Greymatter
+    common_name: "{{ service }}"
+
+- name: Generate {{ service }} ssl crt rootCA
+  openssl_certificate:
+    path: "{{ certs_home_dir }}/{{ service }}.crt"
+    csr_path: "{{ certs_home_dir }}/{{ service }}.csr"
+    ownca_path: "{{ certs_home_dir }}/rootCA.crt"
+    ownca_privatekey_path: "{{ certs_home_dir }}/rootCA.key"
+    provider: ownca
+
+- name: Update the certs dir permissions
+  file:
+    path: "{{ certs_home_dir }}"
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+    recurse: yes

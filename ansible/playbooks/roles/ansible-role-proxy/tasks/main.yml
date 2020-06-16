@@ -3,13 +3,13 @@
 # Create edge egress and ingress certs
 - name: Create edge egress/ingress leaf certs # Only use when customer is not sending its own certs
   include_role:
-    name: ansible-role-acert
+    name: ansible-role-certs
   vars:
-    acert_service: "{{ item.acert_service_name }}"
-    acert_home_dir: "{{ item.acert_home_dir }}"
+    service: "{{ item.service_name }}"
+    certs_home_dir: "{{ item.certs_home_dir }}"
   loop:
-    - {acert_service_name: 'edge', acert_home_dir: '/etc/proxy/tls/sidecar'}
-    - {acert_service_name: 'edge', acert_home_dir: '/etc/proxy/tls/edge'}
+    - {service_name: 'edge', certs_home_dir: '/etc/proxy/tls/sidecar'}
+    - {service_name: 'edge', certs_home_dir: '/etc/proxy/tls/edge'}
   when: XDS_CLUSTER == 'edge'
 
 - name: Run gm-proxy binary as a service
