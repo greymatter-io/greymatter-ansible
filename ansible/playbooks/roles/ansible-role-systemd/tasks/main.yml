@@ -29,6 +29,12 @@
     remote_src: yes
   # when: "{{ 'control' not in systemd_service}}"
 
+- name: Extract Service Tar for gm-slo
+  command: "tar -xvf {{ base_path }}/{{ nexus_tar_file }} -C {{ base_path }}"
+  become: yes
+  become_user: root
+  when: systemd_service == "gm-slo"
+
 # - name: Copy service files from local to server ## Temp task
 #   copy:
 #     src: "../../../../ubuntu-temp/{{ systemd_service }}/"
@@ -124,7 +130,14 @@
     dest: "/etc/logrotate.d/{{ systemd_service }}"
 
 - name: Confirm Service is Running
+  systemd:
+    state: started
+    name: "{{ systemd_service }}.service"
+  when: systemd_service == "gm-slo"
+  
+- name: Confirm Service is Running
   command: "systemctl status {{ systemd_service }}.service"
   register: service_status
   failed_when: "'running' not in service_status.stdout or 'error' in service_status.stdout"
   changed_when: False
+  when: systemd_service != "gm-slo"

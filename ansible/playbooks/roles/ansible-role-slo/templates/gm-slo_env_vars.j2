@@ -1,0 +1,19 @@
+# {{ ansible_managed }}
+
+POSTGRESQL_USERNAME={{ POSTGRESQL_USERNAME | default('greymatter') }}
+POSTGRESQL_PASSWORD={{ POSTGRESQL_PASSWORD | default('greymatter') }}
+POSTGRESQL_DATABASE={{ POSTGRESQL_DATABASE | default('greymatter') }}
+POSTGRESQL_ENDPOINT={{ POSTGRESQL_ENDPOINT | default('gm_postgresql.greymatter') }}
+DATABASE_URI={{ DATABASE_URI | default('postgres://greymatter:greymatter@gm_postgresql.greymatter:5432/greymatter') }}
+NODE_ENV={{ NODE_ENV | default('production') }}
+SERVICE_PORT={{ SERVICE_PORT | default(1337) }}
+SSL_ENABLED={{ SSL_ENABLED | default('false') }}
+SSL_SERVER_CA={{ SSL_SERVER_CA | default('/etc/proxy/tls/sidecar/rootCA.crt') }}
+SSL_SERVER_CERT={{ SSL_SERVER_CERT | default('/etc/proxy/tls/sidecar/slo.crt') }}
+SSL_SERVER_KEY={{ SSL_SERVER_KEY | default('/etc/proxy/tls/sidecar/slo.key') }}
+SERVICE_SSL_ENABLED={{ SERVICE_SSL_ENABLED | default('true') }}
+SERVICE_SSL_CA={{ SERVICE_SSL_CA | default('/etc/proxy/tls/sidecar/rootCA.crt') }}
+SERVICE_SSL_CERT={{ SERVICE_SSL_CERT | default('/etc/proxy/tls/sidecar/slo.crt') }}
+SERVICE_SSL_KEY={{ SERVICE_SSL_KEY | default('/etc/proxy/tls/sidecar/slo.key') }}
+DROP_SCHEMA={{ DROP_SCHEMA | default('false') }}
+SSL_1_WAY_SSL={{ SSL_1_WAY_SSL | default('false') }}

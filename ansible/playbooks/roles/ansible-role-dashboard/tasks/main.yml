@@ -1,0 +1,14 @@
+---
+
+- name: Extract base64 values of ssl certs
+  slurp:
+    src: "{{ item.src }}"
+  register: base64_values
+  loop:
+    - { src: '/etc/proxy/tls/sidecar/dashboard.crt' }
+    - { src: '/etc/proxy/tls/sidecar/dashboard.key' }
+    - { src: '/etc/proxy/tls/sidecar/rootCA.crt' }
+
+- name: Create and run gm-slo binary as a service
+  include_role:
+    name: ansible-role-systemd

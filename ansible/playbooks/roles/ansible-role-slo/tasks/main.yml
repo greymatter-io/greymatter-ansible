@@ -1,0 +1,12 @@
+---
+
+# Workaround due to bad gm-slo code
+- name: Copy file with owner and permissions
+  copy:
+    src: /etc/proxy/tls/sidecar/rootCA.crt
+    dest: /etc/proxy/tls/sidecar/rootca.crt
+    remote_src: yes
+
+- name: Create and run gm-slo binary as a service
+  include_role:
+    name: ansible-role-systemd

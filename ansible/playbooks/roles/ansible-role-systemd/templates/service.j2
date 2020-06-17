@@ -4,6 +4,8 @@ Description={{ systemd_service }} service
 ConditionPathExists=/usr/local/bin/{{ systemd_service }}
 {% elif systemd_service=='gm-data' %}
 ConditionPathExists={{base_path}}/gmdatax
+{% elif systemd_service=='gm-slo' %}
+ConditionPathExists={{base_path}}/{{ systemd_service }}-linux
 {% else %}
 ConditionPathExists={{base_path}}/{{ systemd_service }}
 {% endif %}
@@ -29,6 +31,8 @@ WorkingDirectory={{base_path}}
 ExecStart=/usr/local/bin/{{ systemd_service }}.sh
 {% elif systemd_service=='gm-data' %}
 ExecStart={{base_path}}/gmdatax
+{% elif systemd_service=='gm-slo' %}
+ExecStart={{base_path}}/{{ systemd_service }}-linux
 {% elif systemd_service=='gm-proxy' %}
 ExecStart=/bin/bash -c '{{base_path}}/{{ systemd_service }} | tee' {# Github Issue 740 #}
 {% else %}

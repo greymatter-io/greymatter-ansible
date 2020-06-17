@@ -1,0 +1,6 @@
+---
+systemd_service: gm-dashboard
+
+nexus_repo_url: "https://nexus.production.deciphernow.com"
+nexus_repo: "repository/raw-dev/greymatter"
+nexus_tar_file: "gm-dashboard-3.4.1.tar.gz"

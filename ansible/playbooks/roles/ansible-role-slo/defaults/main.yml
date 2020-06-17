@@ -1,0 +1,6 @@
+---
+systemd_service: gm-slo
+
+nexus_repo_url: "https://nexus.production.deciphernow.com"
+nexus_repo: "repository/raw-dev/greymatter"
+nexus_tar_file: "gm-slo-1.1.4.tar.gz"
