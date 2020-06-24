@@ -1,20 +1,15 @@
 ---
 
-# Config jsons creation flag
-special_config: false
+# User to save configs
+service_user: "gmuser"
+service_group: "gmuser"
 
 # Path where configs are saved
-special_config_dir: /etc/special-configs
+catalog_services_config_dir: /etc/catalog_service_configs
 
-# Special edge-proxy configs
-edge_proxy_config: false
-edge_proxy_config_dir: /etc/edge-proxy-configs
-
-# Service edge config jsons creation flag
-value_edge_config: false
-
-# Path where service edge configs are saved
-edge_config_dir: /etc/edge-configs/{{ global.service_name }}
+global:  
+  service_name: "{{ SERVICE_NAME | default('null') }}"
+  zone_key: zone-default-zone
 
 values:
     edge_config:
@@ -120,3 +115,28 @@ values:
                 cert: server.crt
                 key: server.key
                 ca: ca.crt
+    ijwt:
+        name: 'JWT Security Internal'
+        documentation: ''
+        capability: 'Grey Matter'
+        version: 1.0.7
+    control_api:
+        name: 'Grey Matter Control API'
+        documentation: '/services/control-api/latest/'
+        capability: 'Mesh'
+        version: 1.4.3
+    dashboard:
+        name: 'Grey Matter Dashboard'
+        documentation: ''
+        capability: 'Apps'
+        version: 3.4.1
+    slo:
+        name: 'Grey Matter Service Level Objectives'
+        documentation: '/services/slo/latest/'
+        capability: 'Sense'
+        version: 1.1.4
+    edge:
+        name: 'Grey Matter Edge'
+        documentation: '/'
+        capability: 'Mesh'
+        version: 1.4.2

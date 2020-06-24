@@ -6,6 +6,10 @@
     file:
       path: roles/ansible-role-certs/files/sidecar.tgz
       state: absent
+  - name: Remove edge certificate.p12
+    file:
+      path: roles/ansible-role-dashboard/files/certificate.p12
+      state: absent
   - name: Remove ijwt_secrets.tgz
     file:
       path: roles/ansible-role-ijwt-secrets/files/ijwt_secrets.tgz

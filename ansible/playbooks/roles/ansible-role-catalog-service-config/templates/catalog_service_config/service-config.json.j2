@@ -1,0 +1,90 @@
+{
+  "clusterName": "{{ global.service_name }}",
+  "zoneName": "{{ global.zone_key }}",
+  {% if global.service_name=='catalog' %}
+  "name": "{{ values.catalog.name }}",
+  {% elif global.service_name=='control-api' %}
+  "name": "{{ values.control_api.name }}",
+  {% elif global.service_name=='dashboard' %}
+  "name": "{{ values.dashboard.name }}",
+  {% elif global.service_name=='edge' %}
+  "name": "{{ values.edge.name }}",
+  {% elif global.service_name=='data-internal' %}
+  "name": "{{ values.idata.name }}",
+  {% elif global.service_name=='internal-jwt-security' %}
+  "name": "{{ values.ijwt.name }}",
+  {% elif global.service_name=='slo' %}
+  "name": "{{ values.slo.name }}",
+  {% else %}
+  "name": "{{ values.catalog.name }}",
+  {% endif %}
+    {% if global.service_name=='catalog' %}
+  "version": "{{ values.catalog.version }}",
+  {% elif global.service_name=='control-api' %}
+  "version": "{{ values.control_api.version }}",
+  {% elif global.service_name=='dashboard' %}
+  "version": "{{ values.dashboard.version }}",
+  {% elif global.service_name=='edge' %}
+  "version": "{{ values.edge.version }}",
+  {% elif global.service_name=='data-internal' %}
+  "version": "{{ values.idata.version }}",
+  {% elif global.service_name=='internal-jwt-security' %}
+  "version": "{{ values.ijwt.version }}",
+  {% elif global.service_name=='prometheus' %}
+  "version": "{{ values.prometheus.version }}",
+  {% elif global.service_name=='slo' %}
+  "version": "{{ values.slo.version }}",
+  {% else %}
+  "version": "{{ values.catalog.version }}",
+  {% endif %}
+  "owner": "Decipher",
+  {% if global.service_name=='catalog' %}
+  "capability": "{{ values.catalog.capability }}",
+  {% elif global.service_name=='control-api' %}
+  "capability": "{{ values.control_api.capability }}",
+  {% elif global.service_name=='dashboard' %}
+  "capability": "{{ values.dashboard.capability }}",
+  {% elif global.service_name=='edge' %}
+  "capability": "{{ values.edge.capability }}",
+  {% elif global.service_name=='data-internal' %}
+  "capability": "{{ values.idata.capability }}",
+  {% elif global.service_name=='internal-jwt-security' %}
+  "capability": "{{ values.ijwt.capability }}",
+  {% elif global.service_name=='prometheus' %}
+  "capability": "{{ values.prometheus.capability }}",
+  {% elif global.service_name=='slo' %}
+  "capability": "{{ values.slo.capability }}",
+  {% else %}
+  "capability": "{{ values.catalog.capability }}",
+  {% endif %}
+  "runtime": "GO",
+  {% if global.service_name=='catalog' %}
+  "documentation": "{{ values.catalog.documentation }}",
+  {% elif global.service_name=='control-api' %}
+  "documentation": "{{ values.control_api.documentation }}",
+  {% elif global.service_name=='dashboard' %}
+  "documentation": "{{ values.dashboard.documentation }}",
+  {% elif global.service_name=='edge' %}
+  "documentation": "{{ values.edge.documentation }}",
+  {% elif global.service_name=='data-internal' %}
+  "documentation": "{{ values.idata.documentation }}",
+  {% elif global.service_name=='internal-jwt-security' %}
+  "documentation": "{{ values.ijwt.documentation }}",
+  {% elif global.service_name=='prometheus' %}
+  "documentation": "{{ values.prometheus.documentation }}",
+  {% elif global.service_name=='slo' %}
+  "documentation": "{{ values.slo.documentation }}",
+  {% else %}
+  "documentation": "{{ values.catalog.documentation }}",
+  {% endif %}
+  "prometheusJob": "{{ global.service_name }}",
+  "minInstances": 1,
+  "maxInstances": 1,
+  "authorized": true,
+  "clusterID": "",
+  "meshID": "",
+  "enableInstanceMetrics": true,
+  "enableHistoricalMetrics": true,
+  "metricsTemplate": "",
+  "metricsPort": 8081
+}

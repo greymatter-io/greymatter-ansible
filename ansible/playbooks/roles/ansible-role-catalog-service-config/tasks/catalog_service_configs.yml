@@ -1,0 +1,18 @@
+---
+
+- name: Create/Update catalog service json configs files for {{ global.service_name }}
+  template:
+    src: "catalog_service_config/service-config.json.j2"
+    dest: "{{ catalog_services_config_dir }}/{{ SERVICE_NAME }}.json"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+
+- name: Post services to catalog service
+  shell: |
+    curl -X POST "Content-Type: application/json" \
+    --data-binary @{{ catalog_services_config_dir }}/{{ SERVICE_NAME }}.json \
+    https://gm_edge.greymatter:8080/services/catalog/latest/clusters \
+    -k \
+    --cert /etc/proxy/tls/sidecar/control-api.crt \
+    --key /etc/proxy/tls/sidecar/control-api.key \
+    -H "user_dn:CN=quickstart,OU=Engineering,O=Decipher Technology Studios,L=Alexandria,ST=Virginia,C=US"

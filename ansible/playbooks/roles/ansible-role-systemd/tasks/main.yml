@@ -33,7 +33,7 @@
   command: "tar -xvf {{ base_path }}/{{ nexus_tar_file }} -C {{ base_path }}"
   become: yes
   become_user: root
-  when: systemd_service == "gm-slo"
+  when: systemd_service == "gm-slo" or systemd_service == "gm-dashboard"
 
 # - name: Copy service files from local to server ## Temp task
 #   copy:

@@ -33,10 +33,10 @@
         apply:
           tags: gm_config
       vars:
-        GLOBAL_SECRET_ENABLED: true
-        SERVICE_NAME_VALUES: [ 'control-api', 'internal-jwt-security', 'data-internal', 'catalog', 'slo', 'dashboard' ]
-        SERVICE_HOST_DNS_VALUES: [ 'gm_control_api.greymatter', 'gm_ijwt.greymatter', 'gm_idata.greymatter', 'gm_catalog.greymatter', 'gm_slo.greymatter', 'gm_dashboard.greymatter' ]
-        CLUSTER_PORT_VALUES: [ 5555, 9443, 9080, 9080, 9080, 9080 ]
+        GLOBAL_SECRET_ENABLED_VALUES: [true, true, true, true, true, false, true]
+        SERVICE_NAME_VALUES: [ 'control-api', 'internal-jwt-security', 'data-internal', 'catalog', 'slo', 'prometheus', 'dashboard' ]
+        SERVICE_HOST_DNS_VALUES: [ 'gm_control_api.greymatter', 'gm_ijwt.greymatter', 'gm_idata.greymatter', 'gm_catalog.greymatter', 'gm_slo.greymatter', 'gm_prometheus.greymatter' ,'gm_dashboard.greymatter' ]
+        CLUSTER_PORT_VALUES: [ 5555, 9443, 9080, 9080, 9080, 9090, 1337 ]
       tags: gm_config
   tags: gm_fabric
 
@@ -69,6 +69,15 @@
   - ansible-role-preparatory
   - { role: ansible-role-certs, service: edge }
   - { role: ansible-role-proxy, XDS_CLUSTER: edge, XDS_HOST: gm_control.greymatter }
+  tasks:
+    - name: Create p12 cert
+      command: openssl pkcs12 -export -out /etc/proxy/tls/sidecar/certificate.p12 -inkey /etc/proxy/tls/sidecar/edge.key -in /etc/proxy/tls/sidecar/edge.crt -certfile /etc/proxy/tls/sidecar/rootCA.crt -passin pass:pass -passout pass:pass
+
+    - name: Download p12 cert
+      fetch:
+        src: "/etc/proxy/tls/sidecar/certificate.p12"
+        dest: roles/ansible-role-dashboard/files/
+        flat: yes
   tags: gm_edge
 
 # Run internal jwt and its sidecar
@@ -104,7 +113,7 @@
   vars:
     XDS_CLUSTER: data-internal
     XDS_HOST: gm_control.greymatter
-  tags: gm_idata
+  tags: gm_idata, gm_sense
 
 # Run gm-catalog and its sidecar
 - hosts: tag_Name_gm_catalog
@@ -118,7 +127,7 @@
   vars:
     XDS_CLUSTER: catalog
     XDS_HOST: gm_control.greymatter
-  tags: gm_catalog
+  tags: gm_catalog, gm_sense
 
 # Run postgre-sql database
 - hosts: tag_Name_gm_postgresql
@@ -126,7 +135,7 @@
   become: yes
   roles:
     - ansible-role-postgres
-  tags: gm_pg
+  tags: gm_pg, gm_sense
 
 # Run gm-slo and its sidecar
 - hosts: tag_Name_gm_slo
@@ -140,9 +149,25 @@
   vars:
     XDS_CLUSTER: slo
     XDS_HOST: gm_control.greymatter
-  tags: gm_slo
+  tags: gm_slo, gm_sense
 
-# Run gm-slo and its sidecar
+# Run prometheus and its sidecar
+- hosts: tag_Name_gm_prometheus
+  user: ubuntu
+  become: yes
+  roles:
+    - ansible-role-preparatory
+    - { role: ansible-role-certs, service: prometheus }
+    - ansible-role-prometheus
+    - ansible-role-proxy
+  vars:
+    prometheus_components: [ "prometheus"]
+    prometheus_alertmanager_hostport: "localhost:9093"
+    XDS_CLUSTER: prometheus
+    XDS_HOST: gm_control.greymatter
+  tags: gm_prometheus, gm_sense
+
+# Run gm-dashboard and its sidecar
 - hosts: tag_Name_gm_dashboard
   user: ubuntu
   become: yes
@@ -154,4 +179,14 @@
   vars:
     XDS_CLUSTER: dashboard
     XDS_HOST: gm_control.greymatter
-  tags: gm_dashboard
+  tags: gm_dashboard, gm_sense
+
+# Post catalog service configs
+- hosts: tag_Name_gm_control_api
+  user: ubuntu
+  become: yes
+  roles:
+    - { role: ansible-role-catalog-service-config }
+  vars:
+    SERVICE_NAME_VALUES: [ 'control-api', 'internal-jwt-security', 'data-internal', 'catalog', 'slo', 'dashboard', 'edge' ]
+  tags: gm_cc

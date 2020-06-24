@@ -1,0 +1,33 @@
+---
+
+- name: Create catalog service json config directory
+  file:
+    path: "{{ catalog_services_config_dir }}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+
+- name: Create/Update catalog zone service json config
+  template:
+    src: "catalog_service_config/zone-service-config.j2"
+    dest: "{{ catalog_services_config_dir }}/zone-service-config.json"
+    owner: "{{ service_user }}"
+    group: "{{ service_group }}"
+
+- name: Post zone to catalog service
+  shell: |
+    curl -X POST "Content-Type: application/json" \
+    https://gm_edge.greymatter:8080/services/catalog/latest/zones \
+    -k \
+    --cert /etc/proxy/tls/sidecar/control-api.crt \
+    --key /etc/proxy/tls/sidecar/control-api.key \
+    -H "user_dn:CN=quickstart,OU=Engineering,O=Decipher Technology Studios,L=Alexandria,ST=Virginia,C=US" \
+    --data-binary @{{ catalog_services_config_dir }}/zone-service-config.json
+
+- name: Run catalog_service_configs task to create catalog service config jsons
+  include: catalog_service_configs.yml
+  vars:
+    SERVICE_NAME: "{{ item }}"
+  with_items:
+    - "{{ SERVICE_NAME_VALUES }}"

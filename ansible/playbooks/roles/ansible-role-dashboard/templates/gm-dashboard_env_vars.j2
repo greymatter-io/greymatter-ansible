@@ -1,1 +1,13 @@
 # {{ ansible_managed }}
+
+FABRIC_SERVER={{ FABRIC_SERVER | default('/services/catalog/latest/') }}
+CONFIG_SERVER={{ CONFIG_SERVER | default('/services/control-api/latest/v1.0') }}
+USE_PROMETHEUS={{ USE_PROMETHEUS | default('true') }}
+OBJECTIVES_SERVER={{ OBJECTIVES_SERVER | default('/services/slo/latest/') }}
+PROMETHEUS_SERVER={{ PROMETHEUS_SERVER | default('/services/prometheus/latest/api/v1/') }}
+BASE_URL={{ BASE_URL | default('/services/dashboard/3.4.1/') }}
+REQUEST_TIMEOUT={{ REQUEST_TIMEOUT | default(15000) }}
+SERVER_SSL_ENABLED={{ SERVER_SSL_ENABLED | default('true') }}
+SERVER_SSL_CA={{ SERVER_SSL_CA | default('/etc/proxy/tls/sidecar/rootCA.crt') }}
+SERVER_SSL_CERT={{ SERVER_SSL_CERT | default('/etc/proxy/tls/sidecar/dashboard.crt') }}
+SERVER_SSL_KEY={{ SERVER_SSL_KEY | default('/etc/proxy/tls/sidecar/dashboard.key') }}

@@ -1,0 +1,36 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 2m
+  # References the recording rules YAML file below
+rule_files:
+  - "/etc/prometheus/recording_rules.yaml"
+
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+    - targets:
+      - localhost:9090
+  - job_name: gm-metrics-ec2
+    scrape_interval: 5s
+    scrape_timeout: 5s
+    metrics_path: /prometheus
+    scheme: http
+    ec2_sd_configs:
+      - region: us-east-1
+        access_key: {{ GM_CONTROL_AWS_AWS_ACCESS_KEY_ID | default(lookup('env','GM_CONTROL_AWS_AWS_ACCESS_KEY_ID')) }}
+        secret_key: {{ GM_CONTROL_AWS_AWS_SECRET_ACCESS_KEY | default(lookup('env','GM_CONTROL_AWS_AWS_SECRET_ACCESS_KEY')) }}
+        port: 8081
+    relabel_configs:
+      # Only monitor instances with a Name starting with "gm"
+      - source_labels: [__meta_ec2_tag_Name]
+        regex: gm.*
+        action: keep
+        # Use the instance ID as the instance label
+      - source_labels: [__meta_ec2_tag_Name]
+        regex: (gm_)(.*)
+        target_label: job
+        replacement: ${2}

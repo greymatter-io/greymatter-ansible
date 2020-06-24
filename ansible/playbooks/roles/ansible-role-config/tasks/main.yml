@@ -3,10 +3,12 @@
 - name: Run service_json_configs task to create {{ global.service_name }} config jsons
   include: service_json_configs.yml
   vars:
-    SERVICE_NAME: "{{ line_item.0 }}"
-    SERVICE_HOST_DNS: "{{ line_item.1 }}"
-    CLUSTER_PORT: "{{ line_item.2 }}"
+    GLOBAL_SECRET_ENABLED: "{{ line_item.0 }}"
+    SERVICE_NAME: "{{ line_item.1 }}"
+    SERVICE_HOST_DNS: "{{ line_item.2 }}"
+    CLUSTER_PORT: "{{ line_item.3 }}"
   with_together:
+    - "{{ GLOBAL_SECRET_ENABLED_VALUES }}"
     - "{{ SERVICE_NAME_VALUES }}"
     - "{{ SERVICE_HOST_DNS_VALUES }}"
     - "{{ CLUSTER_PORT_VALUES }}"
@@ -21,8 +23,10 @@
 - name: Run edge_json_configs task to create edge config jsons
   include: edge_json_configs.yml
   vars:
-    SERVICE_NAME: "{{ line_item }}"
-  with_items:
+    GLOBAL_SECRET_ENABLED: "{{ line_item.0 }}"
+    SERVICE_NAME: "{{ line_item.1 }}"
+  with_together:
+    - "{{ GLOBAL_SECRET_ENABLED_VALUES }}"
     - "{{ SERVICE_NAME_VALUES }}"
   loop_control:
     loop_var: line_item
@@ -31,3 +35,4 @@
   include: special_json_configs.yml
   vars:
     SERVICE_NAME: special
+    GLOBAL_SECRET_ENABLED: true

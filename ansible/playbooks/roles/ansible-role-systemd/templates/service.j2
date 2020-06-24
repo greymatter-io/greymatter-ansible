@@ -6,6 +6,8 @@ ConditionPathExists=/usr/local/bin/{{ systemd_service }}
 ConditionPathExists={{base_path}}/gmdatax
 {% elif systemd_service=='gm-slo' %}
 ConditionPathExists={{base_path}}/{{ systemd_service }}-linux
+{% elif systemd_service=='gm-dashboard' %}
+ConditionPathExists={{base_path}}/{{ systemd_service }}-linux
 {% else %}
 ConditionPathExists={{base_path}}/{{ systemd_service }}
 {% endif %}
@@ -32,6 +34,8 @@ ExecStart=/usr/local/bin/{{ systemd_service }}.sh
 {% elif systemd_service=='gm-data' %}
 ExecStart={{base_path}}/gmdatax
 {% elif systemd_service=='gm-slo' %}
+ExecStart={{base_path}}/{{ systemd_service }}-linux
+{% elif systemd_service=='gm-dashboard' %}
 ExecStart={{base_path}}/{{ systemd_service }}-linux
 {% elif systemd_service=='gm-proxy' %}
 ExecStart=/bin/bash -c '{{base_path}}/{{ systemd_service }} | tee' {# Github Issue 740 #}
