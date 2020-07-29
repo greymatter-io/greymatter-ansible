@@ -1,5 +1,5 @@
 resource "aws_vpc" "vpc" {
-  cidr_block           = "10.0.0.0/16"
+  cidr_block           = var.vpc_cidr_block
   enable_dns_hostnames = true
   enable_dns_support   = true
   instance_tenancy     = "default"
@@ -11,23 +11,37 @@ resource "aws_vpc" "vpc" {
 
 data "aws_availability_zones" "available" {}
 
-resource "aws_subnet" "public_subnet_1" {
+# resource "aws_subnet" "public_subnet_1" {
+#   vpc_id                  = aws_vpc.vpc.id
+#   cidr_block              = "10.0.2.0/24"
+#   availability_zone       = data.aws_availability_zones.available.names[0]
+#   map_public_ip_on_launch = true
+
+#   tags = {
+#     Name = "gm_public_subnet_1"
+#   }
+# }
+
+resource "aws_subnet" "public_subnets" {
+  count                   = length(var.pub_sub_cidr_blocks)
+
   vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       = data.aws_availability_zones.available.names[0]
+  cidr_block              = var.pub_sub_cidr_blocks[count.index]
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "gm_public_subnet_1"
+    Name = "gm_public_subnet_${count.index}"
   }
 }
+
 # resource "aws_subnet" "public_subnet_2" {
-#   vpc_id                  = "${aws_vpc.vpc.id}"
+#   vpc_id                  = aws_vpc.vpc.id
 #   cidr_block              = "10.0.1.0/24"
 #   availability_zone       = "${data.aws_availability_zones.available.names[1]}"
 #   map_public_ip_on_launch = true
 #   tags = {
-#     Name = "public subnet 2"
+#     Name = "gm_public_subnet_2"
 #   }
 # }
 
@@ -71,14 +85,17 @@ resource "aws_route_table" "rt" {
   }
 }
 
-resource "aws_route_table_association" "rta_1" {
-  subnet_id      = aws_subnet.public_subnet_1.id
+# resource "aws_route_table_association" "rta_1" {
+#   subnet_id      = aws_subnet.public_subnet_1.id
+#   route_table_id = aws_route_table.rt.id
+# }
+
+resource "aws_route_table_association" "rta" {
+  count          = length(var.pub_sub_cidr_blocks)
+
+  subnet_id      = aws_subnet.public_subnets.*.id[count.index]
   route_table_id = aws_route_table.rt.id
 }
-# resource "aws_route_table_association" "rta_2" {
-#   subnet_id      = "${aws_subnet.public_subnet_2.id}"
-#   route_table_id = "${aws_route_table.rt.id}"
-# }
 
 resource "aws_security_group" "sg" {
   name        = "gm_securitygroup"

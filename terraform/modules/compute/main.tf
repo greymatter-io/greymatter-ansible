@@ -28,7 +28,8 @@ resource "aws_instance" "instances" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = var.instance_type
   key_name      = module.ssh_key_pair.key_name
-  subnet_id     = var.pub_sub_1_id
+  # subnet_id     = var.pub_sub_1_id
+  subnet_id     = element(var.gm_public_subnets, count.index)
   associate_public_ip_address = true
   vpc_security_group_ids = [
     var.gm_sg_id,
@@ -40,7 +41,27 @@ resource "aws_instance" "instances" {
   }
 }
 
-# Creater record sets for the instances
+# module "ec2_cluster" {
+#   source                 = "terraform-aws-modules/ec2-instance/aws"
+#   version                = "~> 2.0"
+
+#   instance_count         = var.instance_count
+#   name                   = var.instance_name
+
+#   ami                    = data.aws_ami.ubuntu.id
+#   instance_type          = var.instance_type
+#   key_name               = module.ssh_key_pair.key_name
+#   monitoring             = true
+#   vpc_security_group_ids = [var.gm_sg_id]
+#   subnet_ids             = var.gm_public_subnets
+
+#   # tags = {
+#   #   Name  = element(var.instance_name, count.index)
+#   #   element(var.cluster_tag, count.index) = ""
+#   # }
+# }
+
+# Create record sets for the instances
 resource "aws_route53_record" "priv_record_set" {
   count   = var.instance_count
   zone_id = var.private_zone_id

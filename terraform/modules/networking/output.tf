@@ -1,6 +1,11 @@
-output "gm_public_subnet_1" {
-  description = "GM Pubclic Subnet 1 ID"
-  value       = aws_subnet.public_subnet_1.id
+# output "gm_public_subnet_1" {
+#   description = "GM Pubclic Subnet 1 ID"
+#   value       = aws_subnet.public_subnet_1.id
+# }
+
+output "gm_public_subnets" {
+  description = "List of public subnet ids"
+  value       = aws_subnet.public_subnets.*.id
 }
 
 output "gm_vpc_id" {
