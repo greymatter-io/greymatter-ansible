@@ -3,15 +3,13 @@ locals {
 }
 
 provider "aws" {
-  region  = "us-east-1" # Nova region
-  # region  = "us-west-2" # Oregan region
+  region  = "us-east-1" #"us-west-2"
   version = "~> 2.7"
 }
 
 terraform {
   backend "s3" {
-    bucket   = "terraform-greymatter-backend" # Nova region
-    # bucket   = "terraform-greymatter-backend-us-west-2" # Oregan region
+    bucket   = "terraform-greymatter-backend" # "terraform-greymatter-backend-us-west-2"
     key      = "tfstate"
   }
 }
@@ -29,7 +27,6 @@ module "dns" {
 module "compute" {
   source = "./modules/compute"
 
-  # pub_sub_1_id        = module.networking.gm_public_subnet_1
   gm_public_subnets   = module.networking.gm_public_subnets
   gm_sg_id            = module.networking.gm_sg_id
   private_zone_id     = module.dns.gm_private_zone_id

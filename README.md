@@ -1,7 +1,6 @@
-Current Infrastructure Diagram
+## Architeture Diagram ##
 
-
-Architeture Diagram
+https://app.lucidchart.com/documents/view/e7f00ca8-7e55-4c42-b432-9db99b3db1d4/Xm0rv3w-1eUC
 
 
 #### Deploy Greymatter ####

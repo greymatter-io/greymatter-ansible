@@ -16,8 +16,6 @@ variable "cluster_tag" {
   default = ["gm:cluster:control-api:8080", "control","gm:cluster:edge:8080","gm:cluster:internal-jwt-security:8080","gm:cluster:data-internal:8080","gm:cluster:catalog:8080","gm:cluster:slo:8080","gm:cluster:dashboard:8080","prostgres_db","gm:cluster:prometheus:8080"]
 }
 
-# variable "pub_sub_1_id" {}
-
 variable "gm_public_subnets" {}
 
 variable "gm_sg_id" {}
