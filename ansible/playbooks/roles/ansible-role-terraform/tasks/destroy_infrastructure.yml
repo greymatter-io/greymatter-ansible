@@ -6,6 +6,6 @@
     state: absent
     force_init: true
     backend_config:
-      region: "us-east-1"
+      region: "{{ backend_bucket_region }}"
       bucket: "{{ backend_bucket_name }}"
       key: "tfstate"

@@ -1,6 +1,8 @@
 ---
 backend_bucket_name: "{{ lookup('env','TERRAFORM_BACKEND_BUCKET') }}"
 
+backend_bucket_region: "{{ lookup('env','AWS_DEFAULT_REGION') }}"
+
 deploy_infrastructure:
 
 destroy_infrastructure:

@@ -3,13 +3,15 @@ locals {
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region  = "us-east-1" # Nova region
+  # region  = "us-west-2" # Oregan region
   version = "~> 2.7"
 }
 
 terraform {
   backend "s3" {
-    bucket   = "terraform-greymatter-backend"
+    bucket   = "terraform-greymatter-backend" # Nova region
+    # bucket   = "terraform-greymatter-backend-us-west-2" # Oregan region
     key      = "tfstate"
   }
 }

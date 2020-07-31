@@ -1,3 +1,9 @@
+Current Infrastructure Diagram
+
+
+Architeture Diagram
+
+
 #### Deploy Greymatter ####
 
 # Install dependencies #
